@@ -14,7 +14,6 @@ public class Asteroids
     public static void main (String[] args)
     {
         SwingUtilities.invokeLater( () -> chooseVersion());
-        System.out.println("hello");
     }
 
     /**
