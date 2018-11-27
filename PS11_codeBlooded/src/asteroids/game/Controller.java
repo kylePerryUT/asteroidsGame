@@ -302,6 +302,7 @@ public class Controller implements KeyListener, ActionListener
      */
     public void asteroidDestroyed (Asteroid p)
     {
+        
         // Creates two medium asteroids if a larger one is destroyed.
         if (p.getSize() == 2)
         {
