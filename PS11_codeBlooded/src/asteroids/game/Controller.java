@@ -584,11 +584,7 @@ public class Controller implements KeyListener, ActionListener
         else if (e.getKeyCode() == KeyEvent.VK_UP && ship != null || e.getKeyCode() == KeyEvent.VK_W)
         {
             upKey = false;
-<<<<<<< HEAD
-            //
-=======
             ship.setThruster();
->>>>>>> branch 'master' of https://github.com/kylePerryUT/codeBlooded.git
         }
         else if (e.getKeyCode() == KeyEvent.VK_DOWN && ship != null || e.getKeyCode() == KeyEvent.VK_S
                 || e.getKeyCode() == KeyEvent.VK_SPACE)
