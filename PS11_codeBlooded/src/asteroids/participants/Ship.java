@@ -123,14 +123,31 @@ public class Ship extends Participant implements AsteroidDestroyer
     {
         rotate(-Math.PI / 16);
     }
+    
+    /**
+     * 
+     */
+    public void setThruster ()
+    {
+        thruster = false;
+    }
 
     /**
      * Accelerates by SHIP_ACCELERATION
      */
     public void accelerate ()
     {
-        thruster = true;
-        new ParticipantCountdownTimer(this, "end", THRUSTER_DURATION);
+        
+        if (thruster)
+        {
+            thruster = false;
+        }
+        else 
+        {
+            thruster = true;
+        }
+        
+        //new ParticipantCountdownTimer(this, "end", THRUSTER_DURATION);
         accelerate(SHIP_ACCELERATION);
         SoundClips test = new SoundClips();
         Clip accelerate = test.createClip("/sounds/thrust.wav");
