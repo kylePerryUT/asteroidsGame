@@ -4,14 +4,9 @@ import static asteroids.game.Constants.*;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
-import javax.sound.sampled.Clip;
-import asteroids.destroyers.AsteroidDestroyer;
-import asteroids.destroyers.ShipDestroyer;
 import asteroids.game.Controller;
 import asteroids.game.Participant;
 import asteroids.game.ParticipantCountdownTimer;
-import sounds.*;
- 
 
 public class Debris extends Participant
 {
@@ -29,7 +24,6 @@ public class Debris extends Participant
         this.controller = controller;
         setPosition(x, y);
         //setRotation(2 * Math.PI * RANDOM.nextDouble());
-        setSpeed(1);
         
         // Sets a random velocity for the debris which causes it to move.
         setVelocity(1, RANDOM.nextDouble() * 2 * Math.PI);
@@ -41,7 +35,7 @@ public class Debris extends Participant
         if (type.equals("Asteroid"))
         {
             //Draw asteroid debris
-            Ellipse2D.Double asteroidDebris = new Ellipse2D.Double(x, y, 1, 1);
+            Ellipse2D.Double asteroidDebris = new Ellipse2D.Double(0, 0, 1, 1);
             outline = asteroidDebris;
         }
         else if (type.equals("Ship"))

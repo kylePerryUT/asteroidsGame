@@ -147,6 +147,12 @@ public class Asteroid extends Participant implements ShipDestroyer
     {
         if (p instanceof AsteroidDestroyer)
         {
+            // Add asteroid debris.
+            controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Asteroid", 0));
+            controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Asteroid", 0));
+            controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Asteroid", 0));
+            controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Asteroid", 0));
+            
             SoundClips test = new SoundClips();
             
             if(this.size == 2)
