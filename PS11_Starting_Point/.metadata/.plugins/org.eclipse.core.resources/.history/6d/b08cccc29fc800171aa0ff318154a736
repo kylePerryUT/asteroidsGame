@@ -1,8 +1,0 @@
-package interfaces;
-
-public interface Speaker
-{
-    public String speak ();
-    
-    public String sing ();
-}
