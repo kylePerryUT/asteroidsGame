@@ -17,9 +17,18 @@ public class Ship extends Participant implements AsteroidDestroyer
 {
     /** The outline of the ship */
     private Shape outline;
+    
+    /** The outline of the ship without the thruster */
+    private Shape shipNoThruster;
+    
+    /** The outline of the ship with the thruster */
+    private Shape shipAndThruster;
 
     /** Game controller */
     private Controller controller;
+    
+    /** Thruster indicator */
+    private boolean thruster;
 
     /**
      * Constructs a ship at the specified coordinates that is pointed in the given direction.
@@ -30,15 +39,28 @@ public class Ship extends Participant implements AsteroidDestroyer
         setPosition(x, y);
         setRotation(direction);
         setDirection(direction);
+        thruster = false;
         
-        Path2D.Double poly = new Path2D.Double();
-        poly.moveTo(21, 0);
-        poly.lineTo(-21, 12);
-        poly.lineTo(-14, 10);
-        poly.lineTo(-14, -10);
-        poly.lineTo(-21, -12);
-        poly.closePath();
-        outline = poly;
+        Path2D.Double shipPoly = new Path2D.Double();
+        shipPoly.moveTo(21, 0);
+        shipPoly.lineTo(-21, 12);
+        shipPoly.lineTo(-14, 10);
+        shipPoly.lineTo(-14, -10);
+        shipPoly.lineTo(-21, -12);
+        shipPoly.closePath();
+        shipNoThruster = shipPoly;
+        
+        // Draw the thruster
+        Path2D.Double thrusterPoly = new Path2D.Double();
+        thrusterPoly.moveTo(-14, -7);
+        thrusterPoly.lineTo(-25, 0);
+        thrusterPoly.lineTo(-14, 7);
+        // Append the ship to the thruster
+        thrusterPoly.append(shipPoly, false);
+        shipAndThruster = thrusterPoly;
+        
+        // Initialize the ship without the thruster
+        outline = shipNoThruster;
 
     }
 
@@ -65,6 +87,14 @@ public class Ship extends Participant implements AsteroidDestroyer
     @Override
     protected Shape getOutline ()
     {
+        if (thruster)
+        {
+            outline = shipAndThruster;
+        }
+        else
+        {
+            outline = shipNoThruster;
+        }
         return outline;
     }
 
@@ -99,6 +129,8 @@ public class Ship extends Participant implements AsteroidDestroyer
      */
     public void accelerate ()
     {
+        thruster = true;
+        new ParticipantCountdownTimer(this, "end", THRUSTER_DURATION);
         accelerate(SHIP_ACCELERATION);
         SoundClips test = new SoundClips();
         Clip accelerate = test.createClip("/sounds/thrust.wav");
@@ -121,7 +153,7 @@ public class Ship extends Participant implements AsteroidDestroyer
     {
         if (p instanceof ShipDestroyer)
         {
-            // When the ship is destroyed, an expolsion is played. 
+            // When the ship is destroyed, an explosion is played. 
             SoundClips test = new SoundClips();
             Clip shipBoom = test.createClip("/sounds/bangShip.wav");
             if ( shipBoom != null)
@@ -153,6 +185,11 @@ public class Ship extends Participant implements AsteroidDestroyer
         {
             accelerate();
             new ParticipantCountdownTimer(this, "move", 200);
+        }
+        // Turn the thruster off once the thruster duration has passed
+        if (payload.equals("end"))
+        {
+            thruster = false;
         }
     }
 }

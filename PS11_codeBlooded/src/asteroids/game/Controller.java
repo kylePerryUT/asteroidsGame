@@ -19,8 +19,6 @@ public class Controller implements KeyListener, ActionListener
 
     /** The ship (if one is active) or null (otherwise) */
     private Ship ship;
-    private boolean thrust = true;
-    private Thruster thruster;
     
     /** Ship life one */
     private ShipLives one;
@@ -189,6 +187,15 @@ public class Controller implements KeyListener, ActionListener
         addParticipant(new Asteroid(RANDOM.nextInt(4), 2, EDGE_OFFSET, -EDGE_OFFSET, 3, this));
         addParticipant(new Asteroid(RANDOM.nextInt(4), 2, -EDGE_OFFSET, -EDGE_OFFSET, 3, this));
     }
+    
+//    /**
+//     * Display a thruster at the tail of the ship..
+//     */
+//    private void placeThruster ()
+//    {
+//        // Display a new thruster
+//        addParticipant(new Thruster(ship.getX(), ship.getY(), ship.getDirection(), ship.getRotation(), ship.getSpeed(), this));
+//    }
 
     /**
      * Clears the screen so that nothing is displayed
@@ -365,7 +372,7 @@ public class Controller implements KeyListener, ActionListener
             }
             if (upKey)
             {
-                ship.accelerate(); 
+                ship.accelerate();
             }
             if (downKey && pstate.countBullets() < 8)
             {

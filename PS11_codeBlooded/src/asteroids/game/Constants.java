@@ -79,6 +79,11 @@ public class Constants
      * The game over message
      */
     public final static String GAME_OVER = "Game Over";
+    
+    /**
+     * Duration in milliseconds of a thruster before it disappears.
+     */
+    public final static int THRUSTER_DURATION = 5;
 
     /**
      * Duration in milliseconds of a bullet before it disappears.

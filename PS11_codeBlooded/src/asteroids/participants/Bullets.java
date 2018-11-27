@@ -56,7 +56,6 @@ public class Bullets extends Participant implements AsteroidDestroyer
     @Override
     protected Shape getOutline ()
     {
-        // TODO Auto-generated method stub
         return outline;
     }
 
@@ -65,7 +64,7 @@ public class Bullets extends Participant implements AsteroidDestroyer
     {
         if (p instanceof ShipDestroyer)
         {
-            // Expire the ship from the game
+            // Expire the bullet from the game
             Participant.expire(this);
 
             // Tell the controller the ship was destroyed
