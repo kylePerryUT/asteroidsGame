@@ -29,7 +29,7 @@ public class Debris extends Participant
         setVelocity(1, RANDOM.nextDouble() * 2 * Math.PI);
         
         // Expire debris after a random time within a set range
-        new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(4000 - 3000 + 1) + 3000);
+        new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(3500 - 3000) + 750);
        
         // Draws the debris based on the type of object destroyed
         if (type.equals("Asteroid"))
@@ -45,14 +45,14 @@ public class Debris extends Participant
             {
                 Path2D.Double shipDebris = new Path2D.Double();
                 shipDebris.moveTo(0, 0);
-                shipDebris.lineTo(0, 20);
+                shipDebris.lineTo(0, 10);
                 outline = shipDebris;
             }
             else if (size == 1)
             {
                 Path2D.Double shipDebris = new Path2D.Double();
                 shipDebris.moveTo(20, 0);
-                shipDebris.lineTo(-21, 14);
+                shipDebris.lineTo(-10, 7);
                 outline = shipDebris;
             }
         }
