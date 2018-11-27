@@ -89,6 +89,11 @@ public class Constants
      * Duration in milliseconds of a bullet before it disappears.
      */
     public final static int BULLET_DURATION = 1000;
+    
+    /**
+     * Duration in milliseconds of debris before it disappears.
+     */
+    public final static int DEBRIS_DURATION = 3500;
 
     /**
      * Speed, in pixels per frame, of a bullet.

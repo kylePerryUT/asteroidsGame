@@ -302,6 +302,11 @@ public class Controller implements KeyListener, ActionListener
      */
     public void asteroidDestroyed (Asteroid p)
     {
+        // Add asteroid debris.
+        addParticipant(new Debris(p.getX(), p.getY(), this, "Asteroid", 0));
+        addParticipant(new Debris(p.getX(), p.getY(), this, "Asteroid", 0));
+        addParticipant(new Debris(p.getX(), p.getY(), this, "Asteroid", 0));
+        addParticipant(new Debris(p.getX(), p.getY(), this, "Asteroid", 0));
         // Creates two medium asteroids if a larger one is destroyed.
         if (p.getSize() == 2)
         {
@@ -579,6 +584,7 @@ public class Controller implements KeyListener, ActionListener
         else if (e.getKeyCode() == KeyEvent.VK_UP && ship != null || e.getKeyCode() == KeyEvent.VK_W)
         {
             upKey = false;
+            //
         }
         else if (e.getKeyCode() == KeyEvent.VK_DOWN && ship != null || e.getKeyCode() == KeyEvent.VK_S
                 || e.getKeyCode() == KeyEvent.VK_SPACE)
