@@ -23,7 +23,7 @@ public class Debris extends Participant
     {
         this.controller = controller;
         setPosition(x, y);
-        //setRotation(2 * Math.PI * RANDOM.nextDouble());
+        setRotation(2 * Math.PI * RANDOM.nextDouble());
         
         // Sets a random velocity for the debris which causes it to move.
         setVelocity(1, RANDOM.nextDouble() * 2 * Math.PI);

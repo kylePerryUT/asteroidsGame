@@ -8,7 +8,6 @@ import javax.sound.sampled.Clip;
 import javax.swing.*;
 import asteroids.participants.*;
 
-
 /**
  * Controls a game of Asteroids.
  */
@@ -19,19 +18,22 @@ public class Controller implements KeyListener, ActionListener
 
     /** The ship (if one is active) or null (otherwise) */
     private Ship ship;
-    
+
+    /** The alien ship (if one is active) or null otherwise */
+    private AlienShip alienShip;
+
     /** Ship life one */
     private ShipLives one;
-    
+
     /** Ship life two */
     private ShipLives two;
-    
+
     /** Ship life three */
     private ShipLives three;
 
     /** When this timer goes off, it is time to refresh the animation */
     private Timer refreshTimer;
-    
+
     /** When this timer goes off, it is time to play a beat */
     private Timer beatTimer;
     private int nextBeat = INITIAL_BEAT;
@@ -70,7 +72,7 @@ public class Controller implements KeyListener, ActionListener
 
     /** Number of asteroids in the current level */
     private int level;
-    
+
     /** Records the score */
     private int score;
 
@@ -84,16 +86,16 @@ public class Controller implements KeyListener, ActionListener
 
         // Set up the refresh timer.
         refreshTimer = new Timer(FRAME_INTERVAL, this);
-        
+
         // Clear the transitionTime
         transitionTime = Long.MAX_VALUE;
 
         // Record the display object
         display = new Display(this);
-        
+
         // Set the level to 1.
         level = 1;
-        
+
         // Set the score to 0.
         score = 0;
 
@@ -101,7 +103,6 @@ public class Controller implements KeyListener, ActionListener
         splashScreen();
         display.setVisible(true);
         refreshTimer.start();
-        
 
     }
 
@@ -145,24 +146,32 @@ public class Controller implements KeyListener, ActionListener
         ship = new Ship(SIZE / 2, SIZE / 2, -Math.PI / 2, this);
         addParticipant(ship);
         display.setLegend("");
-        
-        // Display the level and score when the ship is placed. 
+
+        // Display the level and score when the ship is placed.
         display.setLevel(level + "");
         display.setScore(score + "");
     }
-    
-    
-    
+
+    /**
+     * Place an alien ship on the screen.
+     */
+    private void placeAlienShip ()
+    {
+        // Place a ship
+        alienShip = new AlienShip(SIZE / 2, SIZE / 2, -Math.PI / 2);
+        addParticipant(alienShip);
+    }
+
     /**
      * Place the lives underneath the score
      */
-    private void placeLives()
+    private void placeLives ()
     {
         // Place the lives
         one = new ShipLives(LABEL_HORIZONTAL_OFFSET, LABEL_VERTICAL_OFFSET + 60, -Math.PI / 2, this);
         two = new ShipLives(LABEL_HORIZONTAL_OFFSET + 30, LABEL_VERTICAL_OFFSET + 60, -Math.PI / 2, this);
         three = new ShipLives(LABEL_HORIZONTAL_OFFSET + 60, LABEL_VERTICAL_OFFSET + 60, -Math.PI / 2, this);
-        
+
         addParticipant(one);
         addParticipant(two);
         addParticipant(three);
@@ -187,15 +196,6 @@ public class Controller implements KeyListener, ActionListener
         addParticipant(new Asteroid(RANDOM.nextInt(4), 2, EDGE_OFFSET, -EDGE_OFFSET, 3, this));
         addParticipant(new Asteroid(RANDOM.nextInt(4), 2, -EDGE_OFFSET, -EDGE_OFFSET, 3, this));
     }
-    
-//    /**
-//     * Display a thruster at the tail of the ship..
-//     */
-//    private void placeThruster ()
-//    {
-//        // Display a new thruster
-//        addParticipant(new Thruster(ship.getX(), ship.getY(), ship.getDirection(), ship.getRotation(), ship.getSpeed(), this));
-//    }
 
     /**
      * Clears the screen so that nothing is displayed
@@ -211,21 +211,21 @@ public class Controller implements KeyListener, ActionListener
      * Sets things up and begins a new game.
      */
     private void initialScreen ()
-    {      
-        // Reset the level 
+    {
+        // Reset the level
         level = 1;
         nextLevelAstroids = 5;
         numCurrAstroids = 4;
         score = 0;
-        
+
         // Set up the beat timer.
         nextBeat = INITIAL_BEAT;
         beatTimer = new Timer(nextBeat, this);
-        
+
         // Start the beat timer.
         beatTimer.stop();
         beatTimer.restart();
-        
+
         // Clear the screen
         clear();
 
@@ -235,6 +235,9 @@ public class Controller implements KeyListener, ActionListener
         // Place the ship
         placeShip();
         
+        // Place the alien ship
+        placeAlienShip();
+
         // Place the lives
         placeLives();
 
@@ -275,8 +278,8 @@ public class Controller implements KeyListener, ActionListener
 
         // Decrement lives
         lives--;
-        
-        // Removes the lives when they are destroyed. 
+
+        // Removes the lives when they are destroyed.
         if (lives == 2)
         {
             three.remove();
@@ -285,14 +288,14 @@ public class Controller implements KeyListener, ActionListener
         {
             two.remove();
         }
-        else if(lives == 0)
+        else if (lives == 0)
         {
             one.remove();
         }
 
         // Stop the beat timer.
         beatTimer.stop();
-        
+
         // Since the ship was destroyed, schedule a transition
         scheduleTransition(END_DELAY);
     }
@@ -302,13 +305,13 @@ public class Controller implements KeyListener, ActionListener
      */
     public void asteroidDestroyed (Asteroid p)
     {
-        
+
         // Creates two medium asteroids if a larger one is destroyed.
         if (p.getSize() == 2)
         {
             addParticipant(new Asteroid(RANDOM.nextInt(4), 1, p.getX(), p.getY(), RANDOM.nextInt(3) + 3, this));
             addParticipant(new Asteroid(RANDOM.nextInt(4), 1, p.getX(), p.getY(), RANDOM.nextInt(3) + 3, this));
-            
+
             // 20 points for destroying a large asteroid.
             score = score + 20;
             display.setScore(score + "");
@@ -318,7 +321,7 @@ public class Controller implements KeyListener, ActionListener
         {
             addParticipant(new Asteroid(RANDOM.nextInt(4), 0, p.getX(), p.getY(), RANDOM.nextInt(6) + 3, this));
             addParticipant(new Asteroid(RANDOM.nextInt(4), 0, p.getX(), p.getY(), RANDOM.nextInt(6) + 3, this));
-            
+
             // 50 points for destroying a medium asteroid
             score = score + 50;
             display.setScore(score + "");
@@ -328,10 +331,10 @@ public class Controller implements KeyListener, ActionListener
             // 100 points for destroying a small asteroid
             score = score + 100;
             display.setScore(score + "");
-            
+
             // If all the asteroids are gone, schedule a transition to move to the next level
             if (pstate.countAsteroids() == 0)
-            {   
+            {
                 scheduleTransition(END_DELAY);
                 beatTimer.stop();
                 display.addKeyListener(this);
@@ -361,7 +364,7 @@ public class Controller implements KeyListener, ActionListener
         }
 
         // Time to refresh the screen and deal with keyboard input
-        else if (e.getSource() == refreshTimer )
+        else if (e.getSource() == refreshTimer)
         {
             if (rightKey)
             {
@@ -369,7 +372,7 @@ public class Controller implements KeyListener, ActionListener
             }
             if (leftKey)
             {
-                ship.turnLeft();    
+                ship.turnLeft();
             }
             if (upKey)
             {
@@ -377,7 +380,7 @@ public class Controller implements KeyListener, ActionListener
             }
             if (downKey && pstate.countBullets() < 8)
             {
-                placeBullet();  
+                placeBullet();
             }
 
             // It may be time to make a game transition
@@ -390,35 +393,35 @@ public class Controller implements KeyListener, ActionListener
             display.refresh();
 
         }
-        // Plays the beat sound clip after the timer has gone off. 
+        // Plays the beat sound clip after the timer has gone off.
         else if (e.getSource() == beatTimer)
         {
             // Used to create sound clips.
             SoundClips test = new SoundClips();
-            
+
             // If the interval is greater than 300, it decreased by the beat delta.
             if (nextBeat > 300)
             {
                 nextBeat = nextBeat - BEAT_DELTA;
             }
-            // If the interval reaches 300 then the beat will remain at its current pace. 
+            // If the interval reaches 300 then the beat will remain at its current pace.
             else
             {
                 nextBeat = 300;
             }
-            
+
             // Sets the new delay
             beatTimer.setDelay(nextBeat);
-            
+
             // Plays the first beat clip if the other has already been played.
-            // Beats should alternate. 
+            // Beats should alternate.
             if (beat)
             {
-                // Sets the beat to false so that the SECOND beat will be played next. 
+                // Sets the beat to false so that the SECOND beat will be played next.
                 beat = false;
-                
+
                 Clip beat1 = test.createClip("/sounds/beat1.wav");
-                if ( beat1 != null)
+                if (beat1 != null)
                 {
                     if (beat1.isRunning())
                     {
@@ -432,9 +435,9 @@ public class Controller implements KeyListener, ActionListener
             {
                 // Sets the beat to true so that the FIRST beat will be played
                 beat = true;
-                
+
                 Clip beat2 = test.createClip("/sounds/beat2.wav");
-                if ( beat2 != null)
+                if (beat2 != null)
                 {
                     if (beat2.isRunning())
                     {
@@ -445,9 +448,8 @@ public class Controller implements KeyListener, ActionListener
                 }
             }
         }
-       
-    }
 
+    }
 
     /**
      * Returns an iterator over the active participants
@@ -471,22 +473,22 @@ public class Controller implements KeyListener, ActionListener
             // If there are no lives left, the game is over. Show the final
             // screen.
             if (lives <= 0)
-            {   
+            {
                 // Stops the beat Timer.
                 beatTimer.stop();
 
                 finalScreen();
             }
-            
+
             // Places a new ship if the previous ship has been destroyed and there are still lives left.
             else if (lives > 0 && pstate.countAsteroids() != 0)
             {
                 // Starts the beat timer once the delay is over.
                 beatTimer.start();
-                
-                // Re-places the ship. 
+
+                // Re-places the ship.
                 placeShip();
-                
+
                 // Re-adds the key listener.
                 display.addKeyListener(this);
             }
@@ -496,11 +498,11 @@ public class Controller implements KeyListener, ActionListener
                 // The beat timer and interval is reset and restarted.
                 nextBeat = INITIAL_BEAT;
                 beatTimer.restart();
-                
+
                 // Updates the level
                 level++;
                 display.setLevel(level + "");
-                
+
                 // Places a new ship
                 placeShip();
 
