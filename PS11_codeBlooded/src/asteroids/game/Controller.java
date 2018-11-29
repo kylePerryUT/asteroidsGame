@@ -21,6 +21,7 @@ public class Controller implements KeyListener, ActionListener
 
     /** The alien ship (if one is active) or null otherwise */
     private AlienShip alienShip;
+    private AlienShip smallAlienShip;
 
     /** Ship life one */
     private ShipLives one;
@@ -157,9 +158,26 @@ public class Controller implements KeyListener, ActionListener
      */
     private void placeAlienShip ()
     {
-        // Place a ship
-        alienShip = new AlienShip(SIZE / 2, SIZE / 2, -Math.PI / 2);
-        addParticipant(alienShip);
+        if(level == 2)
+        {
+            // places alien ship in center of screen on level two.
+            alienShip = new AlienShip(SIZE / 2 + 50 , SIZE / 2, -Math.PI / 2, 1);
+            
+            // Adds the participant.
+            addParticipant(alienShip);
+        }
+        else if (level > 2)
+        {
+            // Expires the previous alien ship and places a new ship. 
+            AlienShip.expire(alienShip);
+            smallAlienShip = new AlienShip(SIZE / 2, SIZE / 2, -Math.PI / 2, 0);
+            
+            // Stops the sound clip of the previous alien ship. (TEMPORARY!!!!!!!! NEED TO REMOVE ONCE ALIEN SHIP IS TOTALLY FINISHED.)
+            alienShip.playClip("bigStop");
+            
+            // Adds the participant.
+            addParticipant(smallAlienShip);
+        }
     }
 
     /**
@@ -236,7 +254,7 @@ public class Controller implements KeyListener, ActionListener
         placeShip();
         
         // Place the alien ship
-        placeAlienShip();
+        //placeAlienShip();
 
         // Place the lives
         placeLives();
@@ -337,7 +355,6 @@ public class Controller implements KeyListener, ActionListener
             {
                 scheduleTransition(END_DELAY);
                 beatTimer.stop();
-                display.addKeyListener(this);
             }
         }
     }
@@ -464,6 +481,7 @@ public class Controller implements KeyListener, ActionListener
      */
     private void performTransition ()
     {
+        
         // Do something only if the time has been reached
         if (transitionTime <= System.currentTimeMillis())
         {
@@ -482,19 +500,22 @@ public class Controller implements KeyListener, ActionListener
 
             // Places a new ship if the previous ship has been destroyed and there are still lives left.
             else if (lives > 0 && pstate.countAsteroids() != 0)
-            {
+            { 
+                // Re-adds the key listener.
+                display.addKeyListener(this);
+                
                 // Starts the beat timer once the delay is over.
                 beatTimer.start();
 
                 // Re-places the ship.
-                placeShip();
-
-                // Re-adds the key listener.
-                display.addKeyListener(this);
+                placeShip(); 
             }
             // Proceeds to the next level if all asteroids have been destroyed.
             else if (pstate.countAsteroids() == 0)
             {
+                // Re-adds the key listener.
+                display.addKeyListener(this);
+                
                 // The beat timer and interval is reset and restarted.
                 nextBeat = INITIAL_BEAT;
                 beatTimer.restart();
@@ -508,6 +529,9 @@ public class Controller implements KeyListener, ActionListener
 
                 // Places 4 starting asteroids
                 placeAsteroids();
+                
+                // Place alien ship
+                placeAlienShip();
 
                 // Places one more asteroid onto the board per each level passed.
                 // lvl 1 will have 4, lvl 2 will have 5, lvl 3 will have 6 and so on.
@@ -525,7 +549,10 @@ public class Controller implements KeyListener, ActionListener
                 nextLevelAstroids++;
 
                 // Refreshes the display to show the changes.
-                display.refresh();
+                display.refresh();  
+                
+                // Re-adds the key listener.
+                display.addKeyListener(this);
             }
 
         }

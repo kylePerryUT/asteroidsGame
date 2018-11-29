@@ -5,6 +5,7 @@ import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import javax.sound.sampled.Clip;
+import asteroids.destroyers.AlienDestroyer;
 import asteroids.destroyers.AsteroidDestroyer;
 import asteroids.destroyers.ShipDestroyer;
 import asteroids.game.Controller;
@@ -13,7 +14,7 @@ import asteroids.game.ParticipantCountdownTimer;
 import sounds.*;
  
 
-public class Bullets extends Participant implements AsteroidDestroyer
+public class Bullets extends Participant implements AsteroidDestroyer, AlienDestroyer
 {
     /** The outline of the bullet */
     private Shape outline;
@@ -66,9 +67,6 @@ public class Bullets extends Participant implements AsteroidDestroyer
         {
             // Expire the bullet from the game
             Participant.expire(this);
-
-            // Tell the controller the ship was destroyed
-            
         }
         
     }
