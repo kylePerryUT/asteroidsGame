@@ -15,7 +15,7 @@ import sounds.SoundClips;
 /**
  * Represents asteroids
  */
-public class Asteroid extends Participant implements AlienDestroyer, ShipDestroyer
+public class Asteroid extends Participant 
 {
     /** The size of the asteroid (0 = small, 1 = medium, 2 = large) */
     private int size;

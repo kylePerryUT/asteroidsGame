@@ -1,13 +1,18 @@
 package asteroids.participants;
 
+import static asteroids.game.Constants.BULLET_DURATION;
+import static asteroids.game.Constants.RANDOM;
+import static asteroids.game.Constants.SIZE;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
+import java.util.Random;
 import javax.sound.sampled.Clip;
 import asteroids.destroyers.AlienDestroyer;
 import asteroids.destroyers.AsteroidDestroyer;
 import asteroids.game.*;
 import sounds.*;
+import asteroids.game.Constants.*;
 
 public class AlienShip extends Participant implements AsteroidDestroyer
 {
@@ -26,10 +31,18 @@ public class AlienShip extends Participant implements AsteroidDestroyer
     /** The size of the alien ship. Either 0 for small or 1 for big */
     private int size;
     
-    public AlienShip (int x, int y, double direction, int size)
+    /** The game controller */
+    private Controller controller;
+    
+    public AlienShip (int x, int y, double direction, int speed, int size, Controller controller)
     {
+        this.controller = controller;
+        
         // Set the initial position of the alien ship.
         setPosition(x, y);
+        setVelocity(speed, direction);
+        setDirection(direction);
+        setSpeed(speed);
         
         // Sets the size
         this.size = size;
@@ -80,7 +93,7 @@ public class AlienShip extends Participant implements AsteroidDestroyer
 //        alienShip.append(alienShipBott, false);
 //        alienShip.append(alienShipMid, false);
 //        alienShip.append(alienShipTop, false);
-        
+                
         // Creates the alienSounds object that will be used to create the 
         // sounds for both alien ships.
         alienSounds = new SoundClips();
@@ -114,6 +127,8 @@ public class AlienShip extends Participant implements AsteroidDestroyer
             playClip("Big");
         }
         
+        // Starts timer to change direction.
+        new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(200) + 500);
     }
     
     /**
@@ -164,6 +179,22 @@ public class AlienShip extends Participant implements AsteroidDestroyer
             bigAlien.stop();
         }
     }
+    
+    @Override
+    public void countdownComplete (Object payload)
+    {
+        double[] rand = new double[3];
+        rand[0] = ( 180 / Math.PI);
+        rand[1] = (- 180 / Math.PI);
+        rand[2] = getDirection();
+        
+        if (payload.equals("end"))
+        {
+            setVelocity(getSpeed(), rand[RANDOM.nextInt(3)]);
+        }
+        
+        new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(200) + 500);
+    }
 
     @Override
     protected Shape getOutline ()
@@ -171,9 +202,19 @@ public class AlienShip extends Participant implements AsteroidDestroyer
         return outline;
     }
     
+    /**
+     * Returns the size of the asteroid
+     */
+    public int getSize ()
+    {
+        return size;
+    }
+    
     @Override
     public void collidedWith (Participant p)
     {
+        controller.alienDestroyed(this);
+        
         // Plays the alienShip explosion clip when an alien ship is destroyed. 
         Clip alienBoom = alienSounds.createClip("/sounds/bangAlienShip.wav");
         if ( alienBoom != null)

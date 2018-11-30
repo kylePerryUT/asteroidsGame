@@ -37,8 +37,11 @@ public class Controller implements KeyListener, ActionListener
 
     /** When this timer goes off, it is time to play a beat */
     private Timer beatTimer;
-    private int nextBeat = INITIAL_BEAT;
-    private boolean beat = true;
+    private int nextBeat;
+    private boolean beat;
+    
+    /** Its time for an alien ship */
+    private Timer alienTimer;
 
     /**
      * The time at which a transition to a new stage of the game should be made. A transition is scheduled a few seconds
@@ -99,6 +102,13 @@ public class Controller implements KeyListener, ActionListener
 
         // Set the score to 0.
         score = 0;
+        
+        // Sets up the beat timer.
+        nextBeat = INITIAL_BEAT;
+        beat = true;
+        
+        // Sets up the alien timer
+        alienTimer = new Timer(5000, this);
 
         // Bring up the splash screen and start the refresh timer
         splashScreen();
@@ -161,24 +171,28 @@ public class Controller implements KeyListener, ActionListener
         if(level == 2)
         {
             // places alien ship in center of screen on level two.
-            alienShip = new AlienShip(SIZE / 2 + 50 , SIZE / 2, -Math.PI / 2, 1);
+            alienShip = new AlienShip(-32 , RANDOM.nextInt(SIZE), (RANDOM.nextInt(3) + 1) * Math.PI, 5, 1, this);
             
             // Adds the participant.
             addParticipant(alienShip);
+            alienTimer.stop();
         }
         else if (level > 2)
         {
             // Expires the previous alien ship and places a new ship. 
             AlienShip.expire(alienShip);
-            smallAlienShip = new AlienShip(SIZE / 2, SIZE / 2, -Math.PI / 2, 0);
+            smallAlienShip = new AlienShip(-32, RANDOM.nextInt(SIZE), (RANDOM.nextInt(3) + 1) * Math.PI, 10, 0, this);
             
             // Stops the sound clip of the previous alien ship. (TEMPORARY!!!!!!!! NEED TO REMOVE ONCE ALIEN SHIP IS TOTALLY FINISHED.)
             alienShip.playClip("bigStop");
             
             // Adds the participant.
             addParticipant(smallAlienShip);
+            alienTimer.stop();
         }
     }
+    
+    
 
     /**
      * Place the lives underneath the score
@@ -358,6 +372,32 @@ public class Controller implements KeyListener, ActionListener
             }
         }
     }
+    
+    /**
+     * Alien ship returns after 5 seconds
+     */
+    public void alienDestroyed(AlienShip A)
+    {
+        if (A.getSize() == 0) 
+        {
+            score = score + 1000;
+            display.setScore(score + "");
+        }
+        else if (A.getSize() == 1)
+        {
+            score = score + 200;
+            display.setScore(score + "");
+        }
+        alienTimer.start();
+        
+        // If all the asteroids AND alien ships are gone, schedule a transition to move to the next level
+        if (pstate.countAsteroids() == 0 && pstate.countAliens() == 0)
+        {
+            scheduleTransition(END_DELAY);
+            beatTimer.stop();
+            alienTimer.stop();
+        }
+    }
 
     /**
      * Schedules a transition m msecs in the future
@@ -377,6 +417,8 @@ public class Controller implements KeyListener, ActionListener
         // and bring up the initial screen
         if (e.getSource() instanceof JButton)
         {
+            alienShip.playClip("smallStop");
+            alienShip.playClip("bigStop");
             initialScreen();
         }
 
@@ -400,6 +442,7 @@ public class Controller implements KeyListener, ActionListener
                 placeBullet();
             }
 
+            
             // It may be time to make a game transition
             performTransition();
 
@@ -465,6 +508,11 @@ public class Controller implements KeyListener, ActionListener
                 }
             }
         }
+        else if (e.getSource().equals(alienTimer))
+        {
+            placeAlienShip();
+            alienTimer.stop();
+        }
 
     }
 
@@ -511,8 +559,9 @@ public class Controller implements KeyListener, ActionListener
                 placeShip(); 
             }
             // Proceeds to the next level if all asteroids have been destroyed.
-            else if (pstate.countAsteroids() == 0)
+            else if (pstate.countAsteroids() == 0 && pstate.countAliens() == 0)
             {
+                alienTimer.start();
                 // Re-adds the key listener.
                 display.addKeyListener(this);
                 
@@ -530,8 +579,8 @@ public class Controller implements KeyListener, ActionListener
                 // Places 4 starting asteroids
                 placeAsteroids();
                 
-                // Place alien ship
-                placeAlienShip();
+                
+                
 
                 // Places one more asteroid onto the board per each level passed.
                 // lvl 1 will have 4, lvl 2 will have 5, lvl 3 will have 6 and so on.
