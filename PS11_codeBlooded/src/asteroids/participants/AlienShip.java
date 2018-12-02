@@ -10,11 +10,12 @@ import java.util.Random;
 import javax.sound.sampled.Clip;
 import asteroids.destroyers.AlienDestroyer;
 import asteroids.destroyers.AsteroidDestroyer;
+import asteroids.destroyers.BulletDestroyer;
 import asteroids.game.*;
 import sounds.*;
 import asteroids.game.Constants.*;
 
-public class AlienShip extends Participant implements AsteroidDestroyer
+public class AlienShip extends Participant implements AsteroidDestroyer, BulletDestroyer
 {
     /** The outline of the alien ship */
     private Shape outline;
@@ -34,6 +35,9 @@ public class AlienShip extends Participant implements AsteroidDestroyer
     /** The game controller */
     private Controller controller;
     
+    /** Holds the original direction */
+    private double originalDirection;
+    
     public AlienShip (int x, int y, double direction, int speed, int size, Controller controller)
     {
         this.controller = controller;
@@ -43,57 +47,39 @@ public class AlienShip extends Participant implements AsteroidDestroyer
         setVelocity(speed, direction);
         setDirection(direction);
         setSpeed(speed);
+        originalDirection = direction;
+    
+        
         
         // Sets the size
         this.size = size;
        
         // Draw the top part of the alien ship.
         Path2D.Double alienShip = new Path2D.Double();
-        alienShip.moveTo(-14, -13);
-        alienShip.lineTo(-9, -26);
-        alienShip.lineTo(9, -26);
-        alienShip.lineTo(14, -13);
+        alienShip.moveTo(-14, -8);
+        alienShip.lineTo(-9, -20);
+        alienShip.lineTo(9, -20);
+        alienShip.lineTo(14, -8);
         alienShip.closePath();
         // Draw the middle part of the alien ship.
-        alienShip.moveTo(-30, 0);
-        alienShip.lineTo(-15, -13);
-        alienShip.lineTo(15, -13);
-        alienShip.lineTo(30, 0);
+        alienShip.moveTo(-30, 5);
+        alienShip.lineTo(-15, -8);
+        alienShip.lineTo(15, -8);
+        alienShip.lineTo(30, 5);
         alienShip.closePath();
         // Draw the bottom part of the alien ship.
-        alienShip.moveTo(-30, 0);
-        alienShip.lineTo(-14, 15);
-        alienShip.lineTo(14, 15);
-        alienShip.lineTo(30, 0);
+        alienShip.moveTo(-30, 5);
+        alienShip.lineTo(-14, 20);
+        alienShip.lineTo(14, 20);
+        alienShip.lineTo(30, 5);
         alienShip.closePath();
         
-//        // Draw the top part of the alien ship.
-//        Path2D.Double alienShipTop = new Path2D.Double();
-//        alienShipTop.moveTo(-20, 5);
-//        alienShipTop.lineTo(-18, 10);
-//        alienShipTop.lineTo(18, 10);
-//        alienShipTop.lineTo(20, 5);
-//        alienShipTop.closePath();
-//        // Draw the middle part of the alien ship.
-//        Path2D.Double alienShipMid = new Path2D.Double();
-//        alienShipMid.moveTo(-25, 0);
-//        alienShipMid.lineTo(-20, 5);
-//        alienShipMid.lineTo(20, 5);
-//        alienShipMid.lineTo(25, 0);
-//        alienShipMid.closePath();
-//        // Draw the bottom part of the alien ship.
-//        Path2D.Double alienShipBott = new Path2D.Double();
-//        alienShipBott.moveTo(-25, 0);
-//        alienShipBott.lineTo(-20, -5);
-//        alienShipBott.lineTo(20, -5);
-//        alienShipBott.lineTo(25, 0);
-//        alienShipBott.closePath();
-//        // Append all parts of the ship together.
-//        Path2D.Double alienShip = new Path2D.Double();
-//        alienShip.append(alienShipBott, false);
-//        alienShip.append(alienShipMid, false);
-//        alienShip.append(alienShipTop, false);
-                
+        // Alien ship is too big, needs to be scaled down.
+        AffineTransform test1 = new AffineTransform();
+        test1.scale(.8, .8);
+        alienShip.transform(test1);
+        
+        
         // Creates the alienSounds object that will be used to create the 
         // sounds for both alien ships.
         alienSounds = new SoundClips();
@@ -128,7 +114,7 @@ public class AlienShip extends Participant implements AsteroidDestroyer
         }
         
         // Starts timer to change direction.
-        new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(200) + 500);
+        new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(200) + 400);
     }
     
     /**
@@ -183,14 +169,27 @@ public class AlienShip extends Participant implements AsteroidDestroyer
     @Override
     public void countdownComplete (Object payload)
     {
-        double[] rand = new double[3];
-        rand[0] = ( 180 / Math.PI);
-        rand[1] = (- 180 / Math.PI);
-        rand[2] = getDirection();
-        
+        double[] rand;
+        if(originalDirection == Math.PI)
+        {
+            rand = new double[3];
+            rand[0] = Math.PI -1;
+            rand[1] = Math.PI + 1;
+            rand[2] = Math.PI;
+        }
+        else
+        {
+            rand = new double[3];
+            rand[0] = 0;
+            rand[1] = 1;
+            rand[2] = -1;
+            
+        }
         if (payload.equals("end"))
         {
-            setVelocity(getSpeed(), rand[RANDOM.nextInt(3)]);
+            
+            setDirection(rand[RANDOM.nextInt(3)]);
+            //setVelocity(getSpeed(), rand[RANDOM.nextInt(3)]);
         }
         
         new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(200) + 500);
@@ -213,31 +212,34 @@ public class AlienShip extends Participant implements AsteroidDestroyer
     @Override
     public void collidedWith (Participant p)
     {
-        controller.alienDestroyed(this);
-        
-        // Plays the alienShip explosion clip when an alien ship is destroyed. 
-        Clip alienBoom = alienSounds.createClip("/sounds/bangAlienShip.wav");
-        if ( alienBoom != null)
+        if (p instanceof AlienDestroyer)
         {
-            if (alienBoom.isRunning())
+            Participant.expire(this);
+            controller.alienDestroyed(this);
+            
+            // Plays the alienShip explosion clip when an alien ship is destroyed. 
+            Clip alienBoom = alienSounds.createClip("/sounds/bangAlienShip.wav");
+            if ( alienBoom != null)
             {
-                alienBoom.stop();
+                if (alienBoom.isRunning())
+                {
+                    alienBoom.stop();
+                }
+                alienBoom.setFramePosition(0);
+                alienBoom.start();
+            }   
+            
+            // If an alien ship has been destroyed, stop the sound clip. 
+            if (size == 1 && this.isExpired())
+            {
+                playClip("bigStop");
             }
-            alienBoom.setFramePosition(0);
-            alienBoom.start();
-        }   
-        
-        // If an alien ship has been destroyed, stop the sound clip. 
-        if (size == 1)
-        {
-            playClip("bigStop");
-        }
-        else
-        {
-            playClip("smallStop");
+            else if (size == 0 && this.isExpired())
+            {
+                playClip("smallStop");
+            }
         }
         
-        expire(this);
     }
 
 }

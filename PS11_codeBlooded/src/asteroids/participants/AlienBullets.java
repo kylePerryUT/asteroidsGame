@@ -5,6 +5,7 @@ import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import javax.sound.sampled.Clip;
+import asteroids.destroyers.AlienBulletDestroyer;
 import asteroids.destroyers.AlienDestroyer;
 import asteroids.destroyers.AsteroidDestroyer;
 import asteroids.destroyers.BulletDestroyer;
@@ -15,7 +16,7 @@ import asteroids.game.ParticipantCountdownTimer;
 import sounds.*;
  
 
-public class Bullets extends Participant implements AsteroidDestroyer, AlienDestroyer
+public class AlienBullets extends Participant implements AsteroidDestroyer, ShipDestroyer
 {
     /** The outline of the bullet */
     private Shape outline;
@@ -26,7 +27,7 @@ public class Bullets extends Participant implements AsteroidDestroyer, AlienDest
     /**
      * Constructs a bullet at the specified coordinates that is pointed in the given direction.
      */
-    public Bullets (double x, double y, double direction, Controller controller)
+    public AlienBullets (double x, double y, double direction, Controller controller)
     {
         this.controller = controller;
        
@@ -64,7 +65,7 @@ public class Bullets extends Participant implements AsteroidDestroyer, AlienDest
     @Override
     public void collidedWith (Participant p)
     {
-        if (p instanceof BulletDestroyer)
+        if (p instanceof AlienBulletDestroyer)
         {
             // Expire the bullet from the game
             Participant.expire(this);
