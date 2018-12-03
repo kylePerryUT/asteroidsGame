@@ -211,7 +211,7 @@ public class Controller implements KeyListener, ActionListener
         }
         else if (level > 2)
         {
-            addParticipant(new AlienBullets(alienShip.getX(), alienShip.getY(), RANDOM.nextDouble() * 2 * Math.PI, this));
+            addParticipant(new AlienBullets(smallAlienShip.getX(), smallAlienShip.getY(), Math.atan2(ship.getY(), ship.getX()) * Math.PI, this));
             alienBulletTimer.start();
         }
     }
