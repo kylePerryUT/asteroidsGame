@@ -211,7 +211,9 @@ public class Controller implements KeyListener, ActionListener
         }
         else if (level > 2)
         {
-            addParticipant(new AlienBullets(smallAlienShip.getX(), smallAlienShip.getY(), Math.atan2(ship.getY(), ship.getX()) * Math.PI, this));
+            double testd = Math.atan2(ship.getY(), ship.getX()) - Math.atan2(smallAlienShip.getY(), smallAlienShip.getX());
+            System.out.println("This is the angle: " + testd);
+            addParticipant(new AlienBullets(smallAlienShip.getX(), smallAlienShip.getY(), testd, this));
             alienBulletTimer.start();
         }
     }
@@ -460,7 +462,7 @@ public class Controller implements KeyListener, ActionListener
             {
                 ship.turnLeft();
             }
-            if (upKey)
+            if (upKey && !ship.isExpired())
             {
                 ship.accelerate();
             }
@@ -602,7 +604,7 @@ public class Controller implements KeyListener, ActionListener
                 else if (level > 2)
                 {
                     smallAlienShip.playClip("smallStop");
-                    Participant.expire(alienShip);
+                    Participant.expire(smallAlienShip);
                 }
                 
                 // Starts the timer for an alien ship to appear
@@ -624,9 +626,6 @@ public class Controller implements KeyListener, ActionListener
 
                 // Places 4 starting asteroids
                 placeAsteroids();
-                
-                
-                
 
                 // Places one more asteroid onto the board per each level passed.
                 // lvl 1 will have 4, lvl 2 will have 5, lvl 3 will have 6 and so on.

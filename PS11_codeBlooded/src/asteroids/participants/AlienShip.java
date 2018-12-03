@@ -187,9 +187,7 @@ public class AlienShip extends Participant implements AsteroidDestroyer, BulletD
         }
         if (payload.equals("end"))
         {
-            
             setDirection(rand[RANDOM.nextInt(3)]);
-            //setVelocity(getSpeed(), rand[RANDOM.nextInt(3)]);
         }
         
         new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(200) + 500);
