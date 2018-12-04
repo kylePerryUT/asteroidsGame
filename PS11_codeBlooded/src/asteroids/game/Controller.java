@@ -470,6 +470,7 @@ public class Controller implements KeyListener, ActionListener
                 }
                 else
                 {
+                    // start new game
                     initialScreen();
                 }
             }
