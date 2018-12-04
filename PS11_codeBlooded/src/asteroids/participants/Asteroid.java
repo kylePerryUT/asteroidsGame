@@ -4,18 +4,20 @@ import static asteroids.game.Constants.*;
 import java.awt.Shape;
 import java.awt.geom.*;
 import javax.sound.sampled.Clip;
+import asteroids.destroyers.AlienBulletDestroyer;
 import asteroids.destroyers.AlienDestroyer;
 import asteroids.destroyers.AsteroidDestroyer;
 import asteroids.destroyers.BulletDestroyer;
 import asteroids.destroyers.ShipDestroyer;
 import asteroids.game.Controller;
 import asteroids.game.Participant;
+import asteroids.game.ParticipantState;
 import sounds.SoundClips;
 
 /**
  * Represents asteroids
  */
-public class Asteroid extends Participant implements BulletDestroyer, ShipDestroyer, AlienDestroyer
+public class Asteroid extends Participant implements BulletDestroyer, ShipDestroyer, AlienBulletDestroyer, AlienDestroyer
 {
     /** The size of the asteroid (0 = small, 1 = medium, 2 = large) */
     private int size;
