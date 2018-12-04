@@ -15,6 +15,9 @@ public class Debris extends Participant
 
     /** Game controller */
     private Controller controller;
+    
+    /** Size of the debris */
+    private int debrisSize;
 
     /**
      * Constructs a bullet at the specified coordinates that is pointed in the given direction.
@@ -22,6 +25,7 @@ public class Debris extends Participant
     public Debris (double x, double y, Controller controller, String type, int size)
     {
         this.controller = controller;
+        this.debrisSize = size;
         setPosition(x, y);
         setRotation(2 * Math.PI * RANDOM.nextDouble());
         
@@ -40,27 +44,29 @@ public class Debris extends Participant
         }
         else if (type.equals("Ship"))
         {
-            //Draw ship debris
-            if (size == 0)
+            //Draw regular ship/alien ship debris
+            if (debrisSize == 0)
+            {
+                Path2D.Double shipDebris = new Path2D.Double();
+                shipDebris.moveTo(0, 0);
+                shipDebris.lineTo(0, 5);
+                outline = shipDebris;
+            }
+            else if (debrisSize == 1)
             {
                 Path2D.Double shipDebris = new Path2D.Double();
                 shipDebris.moveTo(0, 0);
                 shipDebris.lineTo(0, 10);
                 outline = shipDebris;
             }
-            else if (size == 1)
+            else if (debrisSize == 2)
             {
                 Path2D.Double shipDebris = new Path2D.Double();
-                shipDebris.moveTo(20, 0);
-                shipDebris.lineTo(-10, 7);
+                shipDebris.moveTo(0, 0);
+                shipDebris.lineTo(0, 20);
                 outline = shipDebris;
             }
         }
-        else if (type.equals("AlienShip"))
-        {
-            //Draw alien ship debris
-        }
-
     }
 
 

@@ -171,8 +171,8 @@ public class Ship extends Participant implements AsteroidDestroyer, AlienBulletD
         if (p instanceof ShipDestroyer)
         {
             // Add ship debris.
-            controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Ship", 1));
-            controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Ship", 1));
+            controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Ship", 2));
+            controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Ship", 2));
             controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Ship", 0));
             
             // When the ship is destroyed, an explosion is played. 
