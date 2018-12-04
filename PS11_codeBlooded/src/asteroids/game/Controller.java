@@ -303,7 +303,7 @@ public class Controller implements KeyListener, ActionListener
 
         // Give focus to the game screen
         display.requestFocusInWindow();
-        display.refresh();
+        display.refresh(); 
     }
 
     /**
@@ -453,19 +453,19 @@ public class Controller implements KeyListener, ActionListener
         // Time to refresh the screen and deal with keyboard input
         else if (e.getSource() == refreshTimer)
         {
-            if (rightKey)
+            if (rightKey && !ship.equals(null))
             {
                 ship.turnRight();
             }
-            if (leftKey)
+            if (leftKey && !ship.equals(null))
             {
                 ship.turnLeft();
             }
-            if (upKey && !ship.isExpired())
+            if (upKey && !ship.equals(null))
             {
                 ship.accelerate();
             }
-            if (downKey && pstate.countBullets() < 8)
+            if (downKey && pstate.countBullets() < 8 && !ship.equals(null))
             {
                 placeBullet();
             }
@@ -588,7 +588,7 @@ public class Controller implements KeyListener, ActionListener
 
                 // Re-places the ship.
                 placeShip();
-                
+
                 if (level > 1)
                 {
                     if (!alienShip.isExpired() || !smallAlienShip.isExpired())
@@ -650,8 +650,6 @@ public class Controller implements KeyListener, ActionListener
                 // Refreshes the display to show the changes.
                 display.refresh();
 
-                // Re-adds the key listener.
-                display.addKeyListener(this);
             }
 
         }
@@ -663,20 +661,23 @@ public class Controller implements KeyListener, ActionListener
     @Override
     public void keyPressed (KeyEvent e)
     {
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT && ship != null || e.getKeyCode() == KeyEvent.VK_D)
+        if ((e.getKeyCode() == KeyEvent.VK_RIGHT && ship != null) || (e.getKeyCode() == KeyEvent.VK_D && ship != null))
         {
             rightKey = true;
         }
-        else if (e.getKeyCode() == KeyEvent.VK_LEFT && ship != null || e.getKeyCode() == KeyEvent.VK_A)
+        else if ((e.getKeyCode() == KeyEvent.VK_LEFT && ship != null)
+                || (e.getKeyCode() == KeyEvent.VK_A && ship != null))
         {
             leftKey = true;
         }
-        else if (e.getKeyCode() == KeyEvent.VK_UP && ship != null || e.getKeyCode() == KeyEvent.VK_W)
+        else if ((e.getKeyCode() == KeyEvent.VK_UP && ship != null)
+                || (e.getKeyCode() == KeyEvent.VK_W && ship != null))
         {
             upKey = true;
         }
-        else if (e.getKeyCode() == KeyEvent.VK_DOWN && ship != null || e.getKeyCode() == KeyEvent.VK_S
-                || e.getKeyCode() == KeyEvent.VK_SPACE)
+        else if ((e.getKeyCode() == KeyEvent.VK_DOWN && ship != null)
+                || (e.getKeyCode() == KeyEvent.VK_S && ship != null)
+                || (e.getKeyCode() == KeyEvent.VK_SPACE && ship != null))
         {
             downKey = true;
         }
@@ -697,21 +698,24 @@ public class Controller implements KeyListener, ActionListener
     @Override
     public void keyReleased (KeyEvent e)
     {
-        if (e.getKeyCode() == KeyEvent.VK_RIGHT && ship != null || e.getKeyCode() == KeyEvent.VK_D)
+        if ((e.getKeyCode() == KeyEvent.VK_RIGHT && ship != null) || (e.getKeyCode() == KeyEvent.VK_D && ship != null))
         {
             rightKey = false;
         }
-        else if (e.getKeyCode() == KeyEvent.VK_LEFT && ship != null || e.getKeyCode() == KeyEvent.VK_A)
+        else if ((e.getKeyCode() == KeyEvent.VK_LEFT && ship != null)
+                || (e.getKeyCode() == KeyEvent.VK_A && ship != null))
         {
             leftKey = false;
         }
-        else if (e.getKeyCode() == KeyEvent.VK_UP && ship != null || e.getKeyCode() == KeyEvent.VK_W)
+        else if ((e.getKeyCode() == KeyEvent.VK_UP && ship != null)
+                || (e.getKeyCode() == KeyEvent.VK_W && ship != null))
         {
             upKey = false;
             ship.setThruster();
         }
-        else if (e.getKeyCode() == KeyEvent.VK_DOWN && ship != null || e.getKeyCode() == KeyEvent.VK_S
-                || e.getKeyCode() == KeyEvent.VK_SPACE)
+        else if ((e.getKeyCode() == KeyEvent.VK_DOWN && ship != null)
+                || (e.getKeyCode() == KeyEvent.VK_S && ship != null)
+                || (e.getKeyCode() == KeyEvent.VK_SPACE && ship != null))
         {
             downKey = false;
         }
