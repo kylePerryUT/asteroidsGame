@@ -212,6 +212,14 @@ public class AlienShip extends Participant implements AsteroidDestroyer, BulletD
     {
         if (p instanceof AlienDestroyer)
         {
+            // Add alien ship debris.
+            controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Ship", 1));
+            controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Ship", 1));
+            controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Ship", 1));
+            controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Ship", 1));
+            controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Ship", 0));
+            controller.addParticipant(new Debris(this.getX(), this.getY(), controller, "Ship", 0));
+            
             Participant.expire(this);
             controller.alienDestroyed(this);
             
