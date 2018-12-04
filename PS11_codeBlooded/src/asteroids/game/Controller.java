@@ -461,11 +461,14 @@ public class Controller implements KeyListener, ActionListener
                 // if there is an alien ship stop the clip
                 if (level > 2 && smallAlienShip != null)
                 {
-                    alienShip.playClip("smallStop");
+                    smallAlienShip.playClip("smallStop");
+                    Participant.expire(smallAlienShip);
+                    initialScreen();
                 }
                 else if (level == 2 && alienShip != null)
                 {
                     alienShip.playClip("bigStop");
+                    Participant.expire(alienShip);
                     initialScreen();
                 }
                 else
@@ -607,7 +610,7 @@ public class Controller implements KeyListener, ActionListener
                 {
                     Participant.expire(smallAlienShip);
                     alienBulletTimer.stop();
-                    alienShip.playClip("smallStop");
+                    smallAlienShip.playClip("smallStop");
                 }
                 // Stops the beat Timer.
                 beatTimer.stop();
