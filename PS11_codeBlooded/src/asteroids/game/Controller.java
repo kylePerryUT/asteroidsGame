@@ -273,6 +273,7 @@ public class Controller implements KeyListener, ActionListener
         nextLevelAstroids = 5;
         numCurrAstroids = 4;
         score = 0;
+        gamesPlayed = 1;
 
         // Set up the beat timer.
         nextBeat = INITIAL_BEAT;
@@ -391,8 +392,13 @@ public class Controller implements KeyListener, ActionListener
             {
                 scheduleTransition(END_DELAY);
                 beatTimer.stop();
-                alienTimer.stop();
-                alienBulletTimer.stop();
+                
+                // Stop the alien timer if it running. 
+                if (alienTimer.isRunning())
+                {
+                    alienTimer.stop();
+                    alienBulletTimer.stop();
+                }
 
             }
         }
@@ -403,20 +409,29 @@ public class Controller implements KeyListener, ActionListener
      */
     public void alienDestroyed (AlienShip A)
     {
-        alienBulletTimer.stop();
-
-        if (A.getSize() == 0)
-        {
-            alienTimer.start();
-            score = score + 1000;
-            display.setScore(score + "");
-        }
-        else if (A.getSize() == 1)
-        {
-            alienTimer.start();
-            score = score + 200;
-            display.setScore(score + "");
-        }
+       if(level == 2)
+       {
+           alienShip = null;
+       }
+       else if (level > 2)
+       {
+           smallAlienShip = null;
+       }
+        
+       alienBulletTimer.stop();
+    
+       if (A.getSize() == 0)
+       {
+           alienTimer.start();
+           score = score + 1000;
+           display.setScore(score + "");
+       }
+       else if (A.getSize() == 1)
+       {
+           alienTimer.start();
+           score = score + 200;
+           display.setScore(score + "");
+       }
     }
 
     /**
@@ -443,10 +458,19 @@ public class Controller implements KeyListener, ActionListener
             }
             else
             {
-                gamesPlayed += 1;
-                alienShip.playClip("smallStop");
-                alienShip.playClip("bigStop");
-                initialScreen();
+                if (level > 2 && smallAlienShip != null)
+                {
+                    alienShip.playClip("smallStop");
+                }
+                else if (level == 2 && alienShip != null)
+                {
+                    alienShip.playClip("bigStop");
+                    initialScreen();
+                }
+                else
+                {
+                    initialScreen();
+                }
             }
         }
 
@@ -573,6 +597,8 @@ public class Controller implements KeyListener, ActionListener
             {
                 // Stops the beat Timer.
                 beatTimer.stop();
+                
+                alienTimer.stop();
 
                 finalScreen();
             }
@@ -591,7 +617,7 @@ public class Controller implements KeyListener, ActionListener
 
                 if (level > 1)
                 {
-                    if (!alienShip.isExpired() || !smallAlienShip.isExpired())
+                    if (alienShip != null || smallAlienShip != null)
                     {
                         alienBulletTimer.start();
                     }
@@ -601,12 +627,12 @@ public class Controller implements KeyListener, ActionListener
             else if (pstate.countAsteroids() == 0)
             {
                 // Expires the last alien ship and stops the sound clip.
-                if (level == 2)
+                if (level == 2 && alienShip != null)
                 {
                     alienShip.playClip("bigStop");
                     Participant.expire(alienShip);
                 }
-                else if (level > 2)
+                else if (level > 2 && smallAlienShip != null)
                 {
                     smallAlienShip.playClip("smallStop");
                     Participant.expire(smallAlienShip);
