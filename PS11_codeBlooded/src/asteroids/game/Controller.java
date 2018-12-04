@@ -458,6 +458,7 @@ public class Controller implements KeyListener, ActionListener
             }
             else
             {
+                // if there is an alien ship stop the clip
                 if (level > 2 && smallAlienShip != null)
                 {
                     alienShip.playClip("smallStop");
