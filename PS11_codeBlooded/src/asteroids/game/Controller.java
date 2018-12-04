@@ -178,7 +178,7 @@ public class Controller implements KeyListener, ActionListener
     {
         if (level == 2)
         {
-            // places alien ship in center of screen on level two.
+            // places alien ship on level two.
             alienShip = new AlienShip(-32, RANDOM.nextInt(SIZE), (RANDOM.nextInt(2) + 1) * Math.PI, 5, 1, this);
 
             // Adds the participant.
@@ -248,9 +248,9 @@ public class Controller implements KeyListener, ActionListener
     private void placeAsteroids ()
     {
         addParticipant(new Asteroid(RANDOM.nextInt(4), 2, EDGE_OFFSET, EDGE_OFFSET, 3, this));
-//        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, -EDGE_OFFSET, EDGE_OFFSET, 3, this));
-//        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, EDGE_OFFSET, -EDGE_OFFSET, 3, this));
-//        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, -EDGE_OFFSET, -EDGE_OFFSET, 3, this));
+        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, -EDGE_OFFSET, EDGE_OFFSET, 3, this));
+        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, EDGE_OFFSET, -EDGE_OFFSET, 3, this));
+        addParticipant(new Asteroid(RANDOM.nextInt(4), 2, -EDGE_OFFSET, -EDGE_OFFSET, 3, this));
     }
 
     /**
