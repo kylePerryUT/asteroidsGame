@@ -10,13 +10,12 @@ import asteroids.destroyers.BulletDestroyer;
 import asteroids.destroyers.ShipDestroyer;
 import asteroids.game.Controller;
 import asteroids.game.Participant;
-import asteroids.game.ParticipantState;
 import sounds.SoundClips;
 
 /**
  * Represents asteroids
  */
-public class Asteroid extends Participant implements BulletDestroyer
+public class Asteroid extends Participant implements BulletDestroyer, ShipDestroyer, AlienDestroyer
 {
     /** The size of the asteroid (0 = small, 1 = medium, 2 = large) */
     private int size;

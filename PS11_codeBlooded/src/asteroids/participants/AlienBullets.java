@@ -3,7 +3,6 @@ package asteroids.participants;
 import static asteroids.game.Constants.*;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Path2D;
 import javax.sound.sampled.Clip;
 import asteroids.destroyers.AlienBulletDestroyer;
 import asteroids.destroyers.AlienDestroyer;

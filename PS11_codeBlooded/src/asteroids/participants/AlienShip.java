@@ -6,16 +6,16 @@ import static asteroids.game.Constants.SIZE;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
-import java.util.Random;
 import javax.sound.sampled.Clip;
 import asteroids.destroyers.AlienDestroyer;
 import asteroids.destroyers.AsteroidDestroyer;
 import asteroids.destroyers.BulletDestroyer;
+import asteroids.destroyers.ShipDestroyer;
 import asteroids.game.*;
 import sounds.*;
 import asteroids.game.Constants.*;
 
-public class AlienShip extends Participant implements AsteroidDestroyer, BulletDestroyer
+public class AlienShip extends Participant implements AsteroidDestroyer, BulletDestroyer, ShipDestroyer
 {
     /** The outline of the alien ship */
     private Shape outline;
