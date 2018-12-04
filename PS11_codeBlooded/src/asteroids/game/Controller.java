@@ -204,13 +204,13 @@ public class Controller implements KeyListener, ActionListener
      */
     private void placeAlienBullet ()
     {
-        if (level == 2)
+        if (level == 2 && alienShip != null && ship != null)
         {
             addParticipant(
                     new AlienBullets(alienShip.getX(), alienShip.getY(), RANDOM.nextDouble() * 2 * Math.PI, this));
             alienBulletTimer.start();
         }
-        else if (level > 2)
+        else if (level > 2 && smallAlienShip != null && ship != null)
         {
             addParticipant(new AlienBullets(smallAlienShip.getX(), smallAlienShip.getY(),
                     Math.atan2(ship.getY() - smallAlienShip.getY(), ship.getX() - smallAlienShip.getX()), this));
@@ -597,6 +597,18 @@ public class Controller implements KeyListener, ActionListener
             // screen.
             if (lives <= 0)
             {
+                if (alienShip != null)
+                {
+                    Participant.expire(alienShip);
+                    alienBulletTimer.stop();
+                    alienShip.playClip("bigStop");
+                }
+                else if (smallAlienShip != null)
+                {
+                    Participant.expire(smallAlienShip);
+                    alienBulletTimer.stop();
+                    alienShip.playClip("smallStop");
+                }
                 // Stops the beat Timer.
                 beatTimer.stop();
                 
@@ -633,11 +645,13 @@ public class Controller implements KeyListener, ActionListener
                 {
                     alienShip.playClip("bigStop");
                     Participant.expire(alienShip);
+                    alienBulletTimer.stop();
                 }
                 else if (level > 2 && smallAlienShip != null)
                 {
                     smallAlienShip.playClip("smallStop");
                     Participant.expire(smallAlienShip);
+                    alienBulletTimer.stop();
                 }
 
                 // Starts the timer for an alien ship to appear
