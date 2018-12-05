@@ -29,7 +29,7 @@ public class Controller implements KeyListener, ActionListener
     /** When this timer goes off, it is time to play a beat */
     protected Timer beatTimer;
     protected int nextBeat;
-    protected boolean beat;
+    private boolean beat;
 
     /** Its time for an alien ship */
     protected Timer alienTimer;
@@ -49,16 +49,16 @@ public class Controller implements KeyListener, ActionListener
     protected Display display;
 
     /** Records the left key */
-    protected boolean leftKey;
+    private boolean leftKey;
 
     /** Records the left key */
-    protected boolean rightKey;
+    private boolean rightKey;
 
     /** Records the left key */
-    protected boolean upKey;
+    private boolean upKey;
 
     /** Records the left key */
-    protected boolean downKey;
+    private boolean downKey;
 
     /** Number of asteroids in the next level */
     protected int nextLevelAstroids = 5;
@@ -73,9 +73,9 @@ public class Controller implements KeyListener, ActionListener
     protected int score;
 
     /** Records the games played */
-    protected int gamesPlayed;
+    private int gamesPlayed;
 
-    protected int livesHorizOffset;
+    private int livesHorizOffset;
 
     /**
      * Constructs a controller to coordinate the game and screen
@@ -121,6 +121,7 @@ public class Controller implements KeyListener, ActionListener
         
         // Initialize the live offset
         livesHorizOffset = 0;
+        
 
     }
 
@@ -173,7 +174,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * Place an alien ship on the screen.
      */
-    protected void placeAlienShip ()
+    private void placeAlienShip ()
     {
         if (level == 2)
         {
@@ -201,7 +202,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * Place the alien ship bullets
      */
-    protected void placeAlienBullet ()
+    private void placeAlienBullet ()
     {
         if (level == 2 && alienShip != null && ship != null)
         {
@@ -284,7 +285,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * Clears the screen so that nothing is displayed
      */
-    protected void clear ()
+    private void clear ()
     {
         pstate.clear();
         display.setLegend("");
@@ -335,6 +336,7 @@ public class Controller implements KeyListener, ActionListener
 
         // Give focus to the game screen
         display.setleaderBoard("");
+        display.setAccuracy("");
         display.requestFocusInWindow();
         display.refresh(); 
     }

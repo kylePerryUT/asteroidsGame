@@ -1,19 +1,5 @@
 Put detailed information about all extra credit enhancements here.  
 
-Pressing the T key will teleport the ship to a random location on screen if the ship is not null. (2)
-
-Passing a level will add a life, up to a maximum of 5. (2)
-
-At the end of a game user is asked for initials and their score is recorded. Scores are persistent across multiple games
-	and the top 5 scores are displayed at the end of a game. (12 or 16)
-	
-Objects on screen with special powers using powerup Class (extra lives, powerups for ammo, etc) (8)
-
-Ship doesn't spawn until it is safe from collisions (6)
-
-Game statistics displayed on playing surfact (4)
-
-Bonuses for good game play (4)
-
+Pressing the T key will teleport the ship to a random location on screen if the ship is not null.
 
 

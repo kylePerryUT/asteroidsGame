@@ -22,6 +22,9 @@ public class Screen extends JPanel
     
     /** Current score of game. */
     private String score;
+    
+    /** accuracy */
+    private String accuracy;
 
     /** Game controller */
     private Controller controller;
@@ -36,6 +39,8 @@ public class Screen extends JPanel
         legend = "";
         level = "";
         score = "";
+        accuracy = "";
+        
         setPreferredSize(new Dimension(SIZE, SIZE));
         setMinimumSize(new Dimension(SIZE, SIZE));
         setBackground(Color.black);
@@ -58,6 +63,14 @@ public class Screen extends JPanel
     public void setleaderBoard(String leaderboard)
     {
         this.leaderBoard = leaderboard;
+    }
+    
+    /**
+     * Sets the accuracy.
+     */
+    public void setAccuracy(String Acc)
+    {
+        accuracy = Acc;
     }
     
     /**
@@ -102,15 +115,17 @@ public class Screen extends JPanel
         int size = g.getFontMetrics().stringWidth(legend);
         g.drawString(legend, (SIZE - size) / 2, (SIZE / 2));
         
+        // Draws leaderboard at end of game.
         g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
-        
         int y = 0;
         for (String s: leaderBoard.split("\n"))
         {
             g.drawString(s, (SIZE / 2) - 40, (SIZE / 2) + 50 + y); 
             y += 20;
         }
-            
+        
+        // Draws accuracy in the top middle of the screen
+        g.drawString(accuracy, SIZE / 2 - 30, LABEL_VERTICAL_OFFSET + 30);
         
         // Draw the level in the top right corner
         g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));
