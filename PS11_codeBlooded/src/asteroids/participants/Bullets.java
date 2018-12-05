@@ -10,7 +10,6 @@ import asteroids.destroyers.AsteroidDestroyer;
 import asteroids.destroyers.BulletDestroyer;
 import asteroids.destroyers.ShipDestroyer;
 import asteroids.game.Controller;
-import asteroids.game.EnhancedController;
 import asteroids.game.Participant;
 import asteroids.game.ParticipantCountdownTimer;
 import sounds.*;

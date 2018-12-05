@@ -1,26 +1,2 @@
-<<<<<<< HEAD
-180	HHH
-2666 TTT
-360	Jac
-140	Me
-680	SSS
-730	Ppp
-580	PPP
-210	Tes
-1780 TRA
-90	PPP
-660	BAN
-1680	TTS
-190	jjj
-2540	KP
-90	null
-90	null
-90	null
-120	null
-140	null
-480	null
-90	kp
-710	null
-=======
 
->>>>>>> branch 'master' of https://github.com/kylePerryUT/codeBlooded.git
+90	kp

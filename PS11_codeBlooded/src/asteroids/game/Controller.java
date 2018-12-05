@@ -29,7 +29,7 @@ public class Controller implements KeyListener, ActionListener
     /** When this timer goes off, it is time to play a beat */
     protected Timer beatTimer;
     protected int nextBeat;
-    private boolean beat;
+    protected boolean beat;
 
     /** Its time for an alien ship */
     protected Timer alienTimer;
@@ -49,16 +49,16 @@ public class Controller implements KeyListener, ActionListener
     protected Display display;
 
     /** Records the left key */
-    private boolean leftKey;
+    protected boolean leftKey;
 
     /** Records the left key */
-    private boolean rightKey;
+    protected boolean rightKey;
 
     /** Records the left key */
-    private boolean upKey;
+    protected boolean upKey;
 
     /** Records the left key */
-    private boolean downKey;
+    protected boolean downKey;
 
     /** Number of asteroids in the next level */
     protected int nextLevelAstroids = 5;
@@ -73,9 +73,9 @@ public class Controller implements KeyListener, ActionListener
     protected int score;
 
     /** Records the games played */
-    private int gamesPlayed;
+    protected int gamesPlayed;
 
-    private int livesHorizOffset;
+    protected int livesHorizOffset;
 
     /**
      * Constructs a controller to coordinate the game and screen
@@ -174,7 +174,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * Place an alien ship on the screen.
      */
-    private void placeAlienShip ()
+    protected void placeAlienShip ()
     {
         if (level == 2)
         {
@@ -202,7 +202,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * Place the alien ship bullets
      */
-    private void placeAlienBullet ()
+    protected void placeAlienBullet ()
     {
         if (level == 2 && alienShip != null && ship != null)
         {
@@ -285,7 +285,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * Clears the screen so that nothing is displayed
      */
-    private void clear ()
+    protected void clear ()
     {
         pstate.clear();
         display.setLegend("");

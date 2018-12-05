@@ -177,4 +177,16 @@ public class Constants
      * Distance between ships when used to display lives
      */
     public final static int SHIP_SEPARATION = 6;
+    
+    /**
+     * Bounds of ship spawn safe zone, only used in enhanced mode
+     */
+    public final static int spawnLeftBound = 250;
+
+    public final static int spawnRightBound = 500;
+    
+    public final static int spawnLowerBound = 250;
+    
+    public final static int spawnUpperBound = 500;
+    
 }
