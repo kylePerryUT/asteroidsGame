@@ -14,48 +14,39 @@ import asteroids.participants.*;
 public class Controller implements KeyListener, ActionListener
 {
     /** The state of all the Participants */
-    private ParticipantState pstate;
+    protected ParticipantState pstate;
 
     /** The ship (if one is active) or null (otherwise) */
     private Ship ship;
 
     /** The alien ship (if one is active) or null otherwise */
-    private AlienShip alienShip;
-    private AlienShip smallAlienShip;
-
-    /** Ship life one */
-    private ShipLives one;
-
-    /** Ship life two */
-    private ShipLives two;
-
-    /** Ship life three */
-    private ShipLives three;
+    protected AlienShip alienShip;
+    protected AlienShip smallAlienShip;
 
     /** When this timer goes off, it is time to refresh the animation */
     private Timer refreshTimer;
 
     /** When this timer goes off, it is time to play a beat */
-    private Timer beatTimer;
-    private int nextBeat;
+    protected Timer beatTimer;
+    protected int nextBeat;
     private boolean beat;
 
     /** Its time for an alien ship */
-    private Timer alienTimer;
-    private Timer alienBulletTimer;
+    protected Timer alienTimer;
+    protected Timer alienBulletTimer;
 
     /**
      * The time at which a transition to a new stage of the game should be made. A transition is scheduled a few seconds
      * in the future to give the user time to see what has happened before doing something like going to a new level or
      * resetting the current level.
      */
-    private long transitionTime;
+    protected long transitionTime;
 
     /** Number of lives left */
-    private int lives;
+    protected int lives;
 
     /** The game display */
-    private Display display;
+    protected Display display;
 
     /** Records the left key */
     private boolean leftKey;
@@ -70,19 +61,21 @@ public class Controller implements KeyListener, ActionListener
     private boolean downKey;
 
     /** Number of asteroids in the next level */
-    private int nextLevelAstroids = 5;
+    protected int nextLevelAstroids = 5;
 
     /** Number of asteroids in the current level */
-    private int numCurrAstroids = 4;
+    protected int numCurrAstroids = 4;
 
     /** Number of asteroids in the current level */
-    private int level;
+    protected int level;
 
     /** Records the score */
     private int score;
 
     /** Records the games played */
     private int gamesPlayed;
+
+    private int livesHorizOffset;
 
     /**
      * Constructs a controller to coordinate the game and screen
@@ -122,6 +115,12 @@ public class Controller implements KeyListener, ActionListener
 
         // Initializes the games played
         gamesPlayed = 0;
+        
+        // Initialize the lives counter
+        lives = 0;
+        
+        // Initialize the live offset
+        livesHorizOffset = 0;
 
     }
 
@@ -149,7 +148,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * The game is over. Displays a message to that effect.
      */
-    private void finalScreen ()
+    protected void finalScreen ()
     {
         display.setLegend(GAME_OVER);
         display.removeKeyListener(this);
@@ -158,7 +157,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * Place a new ship in the center of the screen. Remove any existing ship first.
      */
-    private void placeShip ()
+    protected void placeShip ()
     {
         // Place a new ship
         Participant.expire(ship);
@@ -217,20 +216,49 @@ public class Controller implements KeyListener, ActionListener
             alienBulletTimer.start();
         }
     }
-
+    
     /**
-     * Place the lives underneath the score
+     * Place the lives underneath the score and set the number of lives.
      */
-    private void placeLives ()
+    protected void placeLives (int numLives)
     {
         // Place the lives
-        one = new ShipLives(LABEL_HORIZONTAL_OFFSET, LABEL_VERTICAL_OFFSET + 60, -Math.PI / 2, this);
-        two = new ShipLives(LABEL_HORIZONTAL_OFFSET + 30, LABEL_VERTICAL_OFFSET + 60, -Math.PI / 2, this);
-        three = new ShipLives(LABEL_HORIZONTAL_OFFSET + 60, LABEL_VERTICAL_OFFSET + 60, -Math.PI / 2, this);
-
-        addParticipant(one);
-        addParticipant(two);
-        addParticipant(three);
+        int numLife = 1;
+        while ( (numLife <= numLives) && (lives <= 5) )
+        {
+            lives++;
+            ShipLives life = new ShipLives(LABEL_HORIZONTAL_OFFSET + livesHorizOffset, LABEL_VERTICAL_OFFSET + 60, -Math.PI / 2, lives, this);
+            addParticipant(life);
+            livesHorizOffset += 30;
+            numLife++;
+        }
+    }
+    
+    protected void removeLife()
+    {
+        if (lives > 0)
+        {
+            // Find find the "last", or most far right ship life on screen and remove it
+            Participant nextShipLife = null;
+            Iterator<Participant> iter = this.getParticipants();
+            while (iter.hasNext())
+            {
+                Participant p = iter.next();
+                if (p instanceof ShipLives)
+                {
+                    p = (ShipLives) p;
+                    if(((ShipLives) p).getLifeNum() == lives)
+                    {
+                        nextShipLife = p;
+                    }
+                }
+            }
+            Participant.expire(nextShipLife);
+            // Decrement the lives
+            lives--;
+            // Move the offset back
+            livesHorizOffset -= 30;
+        }
     }
 
     /**
@@ -245,7 +273,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * Places an asteroid near one corner of the screen. Gives it a random velocity and rotation.
      */
-    private void placeAsteroids ()
+    protected void placeAsteroids ()
     {
         addParticipant(new Asteroid(RANDOM.nextInt(4), 2, EDGE_OFFSET, EDGE_OFFSET, 3, this));
         addParticipant(new Asteroid(RANDOM.nextInt(4), 2, -EDGE_OFFSET, EDGE_OFFSET, 3, this));
@@ -292,11 +320,14 @@ public class Controller implements KeyListener, ActionListener
         // Place the ship
         placeShip();
 
-        // Place the lives
-        placeLives();
-
-        // Reset statistics
-        lives = 3;
+        // Reset the life placement horizontal offset
+        livesHorizOffset = 0;
+        
+        // Reset the lives
+        lives = 0;
+        
+        // Place the initial lives
+        placeLives(3);
 
         // Start listening to events (but don't listen twice)
         display.removeKeyListener(this);
@@ -329,23 +360,8 @@ public class Controller implements KeyListener, ActionListener
 
         // Null out the ship
         ship = null;
-
-        // Decrement lives
-        lives--;
-
-        // Removes the lives when they are destroyed.
-        if (lives == 2)
-        {
-            three.remove();
-        }
-        else if (lives == 1)
-        {
-            two.remove();
-        }
-        else if (lives == 0)
-        {
-            one.remove();
-        }
+        
+        removeLife();
 
         // Stop the beat timer.
         beatTimer.stop();
@@ -587,7 +603,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * If the transition time has been reached, transition to a new state
      */
-    private void performTransition ()
+    protected void performTransition ()
     {
 
         // Do something only if the time has been reached
