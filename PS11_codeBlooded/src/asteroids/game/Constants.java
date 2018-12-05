@@ -1,12 +1,18 @@
 package asteroids.game;
 
 import java.util.Random;
+import java.util.TreeMap;
 
 /**
  * Provides constants that govern the game.
  */
 public class Constants
 {
+    /**
+     * High Scores
+     */
+    public static TreeMap<Integer, String> leaders = new TreeMap<>();
+    
     /**
      * A shared random number generator for general use.
      */

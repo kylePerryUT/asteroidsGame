@@ -14,6 +14,9 @@ public class Screen extends JPanel
     /** Legend that is displayed across the screen */
     private String legend;
     
+    /** Leader board */
+    private String leaderBoard;
+    
     /** level that is displayed in the top right of the screen. */
     private String level;
     
@@ -29,6 +32,7 @@ public class Screen extends JPanel
     public Screen (Controller controller)
     {
         this.controller = controller;
+        leaderBoard = "";
         legend = "";
         level = "";
         score = "";
@@ -46,6 +50,14 @@ public class Screen extends JPanel
     public void setLegend (String legend)
     {
         this.legend = legend;
+    }
+    
+    /**
+     * sets the leaderboard
+     */
+    public void setleaderBoard(String leaderboard)
+    {
+        this.leaderBoard = leaderboard;
     }
     
     /**
@@ -88,7 +100,17 @@ public class Screen extends JPanel
 
         // Draw the legend across the middle of the panel
         int size = g.getFontMetrics().stringWidth(legend);
-        g.drawString(legend, (SIZE - size) / 2, SIZE / 2);
+        g.drawString(legend, (SIZE - size) / 2, (SIZE / 2));
+        
+        g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
+        
+        int y = 0;
+        for (String s: leaderBoard.split("\n"))
+        {
+            g.drawString(s, (SIZE / 2) - 40, (SIZE / 2) + 50 + y); 
+            y += 20;
+        }
+            
         
         // Draw the level in the top right corner
         g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 30));

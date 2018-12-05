@@ -29,7 +29,7 @@ public class Asteroids
         }
         else if (choice == 1)
         {
-            JOptionPane.showMessageDialog(null, "Sorry, there is no enhanced version");
+            new EnhancedController();
         }
     }
 }

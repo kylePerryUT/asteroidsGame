@@ -69,6 +69,14 @@ public class Display extends JFrame
     }
     
     /**
+     * Sets the leaderboard
+     */
+    public void setleaderBoard (String s)
+    {
+        screen.setleaderBoard(s);
+    }
+    
+    /**
      * Sets the large legend
      */
     public void setLevel (String s)

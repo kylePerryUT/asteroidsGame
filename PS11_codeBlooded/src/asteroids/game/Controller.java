@@ -14,14 +14,14 @@ import asteroids.participants.*;
 public class Controller implements KeyListener, ActionListener
 {
     /** The state of all the Participants */
-    private ParticipantState pstate;
+    protected ParticipantState pstate;
 
     /** The ship (if one is active) or null (otherwise) */
-    private Ship ship;
+    protected Ship ship;
 
     /** The alien ship (if one is active) or null otherwise */
-    private AlienShip alienShip;
-    private AlienShip smallAlienShip;
+    protected AlienShip alienShip;
+    protected AlienShip smallAlienShip;
 
     /** Ship life one */
     private ShipLives one;
@@ -33,29 +33,29 @@ public class Controller implements KeyListener, ActionListener
     private ShipLives three;
 
     /** When this timer goes off, it is time to refresh the animation */
-    private Timer refreshTimer;
+    protected Timer refreshTimer;
 
     /** When this timer goes off, it is time to play a beat */
-    private Timer beatTimer;
-    private int nextBeat;
+    protected Timer beatTimer;
+    protected int nextBeat;
     private boolean beat;
 
     /** Its time for an alien ship */
-    private Timer alienTimer;
-    private Timer alienBulletTimer;
+    protected Timer alienTimer;
+    protected Timer alienBulletTimer;
 
     /**
      * The time at which a transition to a new stage of the game should be made. A transition is scheduled a few seconds
      * in the future to give the user time to see what has happened before doing something like going to a new level or
      * resetting the current level.
      */
-    private long transitionTime;
+    protected long transitionTime;
 
     /** Number of lives left */
-    private int lives;
+    protected int lives;
 
     /** The game display */
-    private Display display;
+    protected Display display;
 
     /** Records the left key */
     private boolean leftKey;
@@ -70,16 +70,16 @@ public class Controller implements KeyListener, ActionListener
     private boolean downKey;
 
     /** Number of asteroids in the next level */
-    private int nextLevelAstroids = 5;
+    protected int nextLevelAstroids = 5;
 
     /** Number of asteroids in the current level */
-    private int numCurrAstroids = 4;
+    protected int numCurrAstroids = 4;
 
     /** Number of asteroids in the current level */
-    private int level;
+    protected int level;
 
     /** Records the score */
-    private int score;
+    protected int score;
 
     /** Records the games played */
     private int gamesPlayed;
@@ -149,7 +149,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * The game is over. Displays a message to that effect.
      */
-    private void finalScreen ()
+    protected void finalScreen ()
     {
         display.setLegend(GAME_OVER);
         display.removeKeyListener(this);
@@ -158,7 +158,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * Place a new ship in the center of the screen. Remove any existing ship first.
      */
-    private void placeShip ()
+    protected void placeShip ()
     {
         // Place a new ship
         Participant.expire(ship);
@@ -245,7 +245,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * Places an asteroid near one corner of the screen. Gives it a random velocity and rotation.
      */
-    private void placeAsteroids ()
+    protected void placeAsteroids ()
     {
         addParticipant(new Asteroid(RANDOM.nextInt(4), 2, EDGE_OFFSET, EDGE_OFFSET, 3, this));
         addParticipant(new Asteroid(RANDOM.nextInt(4), 2, -EDGE_OFFSET, EDGE_OFFSET, 3, this));
@@ -303,6 +303,7 @@ public class Controller implements KeyListener, ActionListener
         display.addKeyListener(this);
 
         // Give focus to the game screen
+        display.setleaderBoard("");
         display.requestFocusInWindow();
         display.refresh(); 
     }
@@ -587,7 +588,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * If the transition time has been reached, transition to a new state
      */
-    private void performTransition ()
+    protected void performTransition ()
     {
 
         // Do something only if the time has been reached
