@@ -9,11 +9,9 @@ import java.util.TreeMap;
 public class Constants
 {
     /**
-     * High Scores
+     * Used to sort and display the top 5 High Scores
      */
     public static TreeMap<Integer, String> leaders = new TreeMap<>();
-    
-    
     
     /**
      * A shared random number generator for general use.

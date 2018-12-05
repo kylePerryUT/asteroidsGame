@@ -91,7 +91,9 @@ public class Display extends JFrame
     {
         screen.setLevel(s);
     }
-
+    /**
+     * Sets the score.
+     */
     public void setScore (String s)
     {
         screen.setScore(s);   

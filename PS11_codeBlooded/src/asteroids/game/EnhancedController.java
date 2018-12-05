@@ -26,15 +26,16 @@ public class EnhancedController extends Controller
     private boolean placeShip;
     
     
-    
-    
-   public EnhancedController()
-   {
-       super();
-       display.setleaderBoard("");
-       placeShip = false;
-       
-   }
+    public EnhancedController()
+    {
+        super();
+        
+        // Set the leadBoard to an empty string.
+        display.setleaderBoard("");
+        
+        // Initializes the placeShip instance variable. 
+        placeShip = false;   
+    }
    
    /**
     * If the transition time has been reached, transition to a new state
@@ -69,55 +70,79 @@ public class EnhancedController extends Controller
                beatTimer.stop();
                
                alienTimer.stop();
+               
+               // Prompts the user to enter their initials. 
                initials = JOptionPane.showInputDialog("Enter anitials:");
                
             try
             {
-                File demo = new File(System.getProperty("user.dir") + "/Leaderboards.txt");
-                FileWriter leaderBoards = new FileWriter(demo, true);
+                // Opens the leader board file. 
+                File scores = new File(System.getProperty("user.dir") + "/Leaderboards.txt");
+                FileWriter leaderBoards = new FileWriter(scores, true);
                 PrintWriter printWriter = new PrintWriter(leaderBoards, true);
                 
+                // Writes to the end of the file. Score then initials. Separated with a tab and a new line. 
                 printWriter.append(score + "\t" + initials + "\n");
-                //printWriter.println(initials + " " + score);
+                
+                // Closes the print writer. 
                 printWriter.close();
                 
-                Scanner read = new Scanner(demo);
+                // Creates a new scanner that reads from the lead boards file. 
+                Scanner read = new Scanner(scores);
                 
+                // Holds the initials.
                 String initials;
+                
+                // Holds the value of the gameScore
                 int gameScore;
+                
+                // The total list of the top 5 scores.
                 String ldrs = "";
+                
+                // Only used to creat a single line that contains the intials first then the score. 
                 String total = "";
+                
                 while (read.hasNext())
                 {
                     gameScore = read.nextInt();
                     initials = read.next();
                     total = initials + "   " + gameScore + "\n";
                     
+                    // Adds the score and the entire string containing score and initials to the treeMap. 
                     leaders.put(gameScore, total);  
                 }
                 
-                
+                // Used to pull only the top 5 scores. 
                 int index = 0;
+                
+                // Iterates over the descending values which will put the biggest score first. 
                  for(Integer key: leaders.descendingKeySet())
                  {
                     index ++;
+                    
+                    // Adds the score and initials the total list. 
                     ldrs = ldrs + leaders.get(key) + "\n";
+                    
+                    // Stops the loop if the top 5 scores have been pulled. 
                     if (index == 5)
                     {
                         break;
                     }
                  }
+                 // tell the display to show the list of scores. 
                  display.setleaderBoard(ldrs);
+                 
+                 // Close the scanner. 
                  read.close();
             }
+            // Throw an exception if the file could not be opened. 
             catch (IOException e)
             {
                 JOptionPane.showMessageDialog(display, "error opening file", "Error", 1);
-                e.printStackTrace();
+                //e.printStackTrace();
             }
-               
-               
-               finalScreen();
+                // Display the game over screen and the leader boards. 
+                finalScreen();
            }
 
            // Places a new ship if the previous ship has been destroyed and there are still lives left.
@@ -423,6 +448,7 @@ public class EnhancedController extends Controller
             {
                 Participant p = iter.next();
                 // if a participant is in the ship spawn zone deem the area unsafe
+                System.out.println("Y Coordinate of participant" + p.getY());
                 if ( (p.getX() > spawnLeftBound && p.getX() < spawnRightBound) 
                             && (p.getY() > spawnLowerBound && p.getY() < spawnUpperBound))
                 {    
@@ -454,3 +480,5 @@ public class EnhancedController extends Controller
         }
     }
 }
+    
+    
