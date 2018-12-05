@@ -12,10 +12,14 @@ public class ShipLives extends Participant
 
     /** Game controller */
     private Controller controller;
+    
+    /** What number of life this is on the screen */
+    private int lifeNum;
 
-    public ShipLives (int x, int y, double direction, Controller controller)
+    public ShipLives (int x, int y, double direction, int lifeNumber, Controller controller)
     {
         this.controller = controller;
+        this.lifeNum = lifeNumber;
         setPosition(x, y);
         setRotation(direction);
         setDirection(direction);
@@ -47,5 +51,10 @@ public class ShipLives extends Participant
     {
         // TODO Auto-generated method stub
         return outline;
+    }
+    
+    public int getLifeNum ()
+    {
+        return lifeNum;
     }
 }

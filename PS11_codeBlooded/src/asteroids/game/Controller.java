@@ -23,15 +23,6 @@ public class Controller implements KeyListener, ActionListener
     protected AlienShip alienShip;
     protected AlienShip smallAlienShip;
 
-    /** Ship life one */
-    private ShipLives one;
-
-    /** Ship life two */
-    private ShipLives two;
-
-    /** Ship life three */
-    private ShipLives three;
-
     /** When this timer goes off, it is time to refresh the animation */
     protected Timer refreshTimer;
 
@@ -84,6 +75,8 @@ public class Controller implements KeyListener, ActionListener
     /** Records the games played */
     private int gamesPlayed;
 
+    private int livesHorizOffset;
+
     /**
      * Constructs a controller to coordinate the game and screen
      */
@@ -122,6 +115,12 @@ public class Controller implements KeyListener, ActionListener
 
         // Initializes the games played
         gamesPlayed = 0;
+        
+        // Initialize the lives counter
+        lives = 0;
+        
+        // Initialize the live offset
+        livesHorizOffset = 0;
 
     }
 
@@ -217,20 +216,49 @@ public class Controller implements KeyListener, ActionListener
             alienBulletTimer.start();
         }
     }
-
+    
     /**
-     * Place the lives underneath the score
+     * Place the lives underneath the score and set the number of lives.
      */
-    private void placeLives ()
+    protected void placeLives (int numLives)
     {
         // Place the lives
-        one = new ShipLives(LABEL_HORIZONTAL_OFFSET, LABEL_VERTICAL_OFFSET + 60, -Math.PI / 2, this);
-        two = new ShipLives(LABEL_HORIZONTAL_OFFSET + 30, LABEL_VERTICAL_OFFSET + 60, -Math.PI / 2, this);
-        three = new ShipLives(LABEL_HORIZONTAL_OFFSET + 60, LABEL_VERTICAL_OFFSET + 60, -Math.PI / 2, this);
-
-        addParticipant(one);
-        addParticipant(two);
-        addParticipant(three);
+        int numLife = 1;
+        while ( (numLife <= numLives) && (lives <= 5) )
+        {
+            lives++;
+            ShipLives life = new ShipLives(LABEL_HORIZONTAL_OFFSET + livesHorizOffset, LABEL_VERTICAL_OFFSET + 60, -Math.PI / 2, lives, this);
+            addParticipant(life);
+            livesHorizOffset += 30;
+            numLife++;
+        }
+    }
+    
+    protected void removeLife()
+    {
+        if (lives > 0)
+        {
+            // Find find the "last", or most far right ship life on screen and remove it
+            Participant nextShipLife = null;
+            Iterator<Participant> iter = this.getParticipants();
+            while (iter.hasNext())
+            {
+                Participant p = iter.next();
+                if (p instanceof ShipLives)
+                {
+                    p = (ShipLives) p;
+                    if(((ShipLives) p).getLifeNum() == lives)
+                    {
+                        nextShipLife = p;
+                    }
+                }
+            }
+            Participant.expire(nextShipLife);
+            // Decrement the lives
+            lives--;
+            // Move the offset back
+            livesHorizOffset -= 30;
+        }
     }
 
     /**
@@ -292,11 +320,14 @@ public class Controller implements KeyListener, ActionListener
         // Place the ship
         placeShip();
 
-        // Place the lives
-        placeLives();
-
-        // Reset statistics
-        lives = 3;
+        // Reset the life placement horizontal offset
+        livesHorizOffset = 0;
+        
+        // Reset the lives
+        lives = 0;
+        
+        // Place the initial lives
+        placeLives(3);
 
         // Start listening to events (but don't listen twice)
         display.removeKeyListener(this);
@@ -330,23 +361,8 @@ public class Controller implements KeyListener, ActionListener
 
         // Null out the ship
         ship = null;
-
-        // Decrement lives
-        lives--;
-
-        // Removes the lives when they are destroyed.
-        if (lives == 2)
-        {
-            three.remove();
-        }
-        else if (lives == 1)
-        {
-            two.remove();
-        }
-        else if (lives == 0)
-        {
-            one.remove();
-        }
+        
+        removeLife();
 
         // Stop the beat timer.
         beatTimer.stop();

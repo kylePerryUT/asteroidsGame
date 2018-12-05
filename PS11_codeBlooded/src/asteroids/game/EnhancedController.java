@@ -1,5 +1,6 @@
 package asteroids.game;
 
+
 import static asteroids.game.Constants.*;
 import sounds.*;
 import java.awt.Dialog;
@@ -168,6 +169,9 @@ public class EnhancedController extends Controller
 
                // Places a new ship
                placeShip();
+               
+               // Add another life for getting to the next level
+               placeLives(1);
 
                // Places 4 starting asteroids
                placeAsteroids();
@@ -210,6 +214,6 @@ public class EnhancedController extends Controller
             ship.setPosition(RANDOM.nextInt(SIZE), RANDOM.nextInt(SIZE));
         }
     }
-    
-    
 }
+    
+    
