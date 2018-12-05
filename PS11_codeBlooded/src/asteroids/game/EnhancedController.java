@@ -423,8 +423,6 @@ public class EnhancedController extends Controller
             {
                 Participant p = iter.next();
                 // if a participant is in the ship spawn zone deem the area unsafe
-                System.out.println("X Coordinate of participant" + p.getX());
-                System.out.println("Y Coordinate of participant" + p.getY());
                 if ( (p.getX() > spawnLeftBound && p.getX() < spawnRightBound) 
                             && (p.getY() > spawnLowerBound && p.getY() < spawnUpperBound))
                 {    
