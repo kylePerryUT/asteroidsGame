@@ -77,6 +77,14 @@ public class Display extends JFrame
     }
     
     /**
+     * Sets the accuracy
+     */
+    public void setAccuracy(String a)
+    {
+        screen.setAccuracy(a);
+    }
+    
+    /**
      * Sets the large legend
      */
     public void setLevel (String s)

@@ -121,6 +121,7 @@ public class Controller implements KeyListener, ActionListener
         
         // Initialize the live offset
         livesHorizOffset = 0;
+        
 
     }
 
@@ -264,7 +265,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * Place a new bullet at the nose of the ship..
      */
-    private void placeBullet ()
+    protected void placeBullet ()
     {
         // Place a new bullet
         addParticipant(new Bullets((ship.getXNose()), ship.getYNose(), ship.getRotation(), this));
@@ -294,7 +295,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * Sets things up and begins a new game.
      */
-    private void initialScreen ()
+    protected void initialScreen ()
     {
         // Reset the level
         level = 1;
@@ -335,6 +336,7 @@ public class Controller implements KeyListener, ActionListener
 
         // Give focus to the game screen
         display.setleaderBoard("");
+        display.setAccuracy("");
         display.requestFocusInWindow();
         display.refresh(); 
     }

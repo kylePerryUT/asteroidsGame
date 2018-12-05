@@ -22,7 +22,11 @@ public class EnhancedController extends Controller
     /** records if the teleport key is pressed. */
     private String initials;
     
-    
+    /**
+     * Tracks bullets fired
+     */
+    private int bulletsFired;
+    private int bulletsHit;
     
     
    public EnhancedController()
@@ -30,6 +34,31 @@ public class EnhancedController extends Controller
        super();
        display.setleaderBoard("");
        
+   }
+   
+   @Override
+   public void initialScreen()
+   {
+      super.initialScreen();
+      bulletsFired = 0;
+   }
+   
+   @Override
+   public void placeBullet()
+   {
+       addParticipant(new Bullets((ship.getXNose()), ship.getYNose(), ship.getRotation(), this));
+       bulletsFired += 1;
+   }
+   
+   public void setBulletsHit(int i)
+   {
+       bulletsHit = bulletsHit + 1;
+   }
+   
+   public String getAccuracy()
+   {
+       double accuracy = (bulletsHit / bulletsFired) * 10;
+       return "Accuracy: " + accuracy + "%";
    }
    
    /**
@@ -65,7 +94,7 @@ public class EnhancedController extends Controller
                beatTimer.stop();
                
                alienTimer.stop();
-               initials = JOptionPane.showInputDialog("Enter anitials:");
+               initials = JOptionPane.showInputDialog("Enter initials:");
                
             try
             {
@@ -73,8 +102,7 @@ public class EnhancedController extends Controller
                 FileWriter leaderBoards = new FileWriter(demo, true);
                 PrintWriter printWriter = new PrintWriter(leaderBoards, true);
                 
-                printWriter.append(score + "\t" + initials + "\n");
-                //printWriter.println(initials + " " + score);
+                printWriter.append(score + " " + initials + "\n");
                 printWriter.close();
                 
                 Scanner read = new Scanner(demo);
@@ -91,7 +119,6 @@ public class EnhancedController extends Controller
                     
                     leaders.put(gameScore, total);  
                 }
-                
                 
                 int index = 0;
                  for(Integer key: leaders.descendingKeySet())
@@ -199,7 +226,15 @@ public class EnhancedController extends Controller
        }
    }
 
-    
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        super.actionPerformed(e);
+        if (e.getSource() == refreshTimer)
+        {
+            //display.setAccuracy(getAccuracy());
+        }
+    }
     
     /**
      * Teleports the ship to a random location on screen. 
