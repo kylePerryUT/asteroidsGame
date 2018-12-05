@@ -22,6 +22,9 @@ public class EnhancedController extends Controller
     /** records if the teleport key is pressed. */
     private String initials;
     
+    /** Tracks if its time to place a new ship */
+    private boolean placeShip;
+    
     
     
     
@@ -29,6 +32,7 @@ public class EnhancedController extends Controller
    {
        super();
        display.setleaderBoard("");
+       placeShip = false;
        
    }
    
@@ -125,8 +129,8 @@ public class EnhancedController extends Controller
                // Starts the beat timer once the delay is over.
                beatTimer.start();
 
-               // Re-places the ship.
-               placeShip();
+               // It's time to try place a new ship.
+               placeShip = true;
 
                if (level > 1)
                {
@@ -167,8 +171,8 @@ public class EnhancedController extends Controller
                level++;
                display.setLevel(level + "");
 
-               // Places a new ship
-               placeShip();
+               // It's time to try place a new ship.
+               placeShip = true;
                
                // Add another life for getting to the next level
                placeLives(1);
@@ -198,8 +202,199 @@ public class EnhancedController extends Controller
 
        }
    }
+   
+   /**
+    * Sets things up and begins a new game.
+    */
+   @Override
+   protected void initialScreen ()
+   {
+       // Reset the level
+       level = 1;
+       nextLevelAstroids = 5;
+       numCurrAstroids = 4;
+       score = 0;
+       gamesPlayed = 1;
 
-    
+       // Set up the beat timer.
+       nextBeat = INITIAL_BEAT;
+       beatTimer = new Timer(nextBeat, this);
+
+       // Start the beat timer.
+       beatTimer.stop();
+       beatTimer.restart();
+
+       // Clear the screen
+       clear();
+
+       // Place asteroids
+       placeAsteroids();
+
+//       // Place the ship
+//       placeShip();
+       // It's time to try place a new ship.
+       placeShip = true;
+
+       // Reset the life placement horizontal offset
+       livesHorizOffset = 0;
+       
+       // Reset the lives
+       lives = 0;
+       
+       // Place the initial lives
+       placeLives(3);
+
+       // Start listening to events (but don't listen twice)
+       display.removeKeyListener(this);
+       display.addKeyListener(this);
+
+       // Give focus to the game screen
+       display.setleaderBoard("");
+       display.requestFocusInWindow();
+       display.refresh(); 
+   }
+
+
+   /**
+    * This method will be invoked because of button presses and timer events.
+    */
+   @Override
+   public void actionPerformed (ActionEvent e)
+   {
+       // The start button has been pressed. Stop whatever we're doing
+       // and bring up the initial screen
+       if (e.getSource() instanceof JButton)
+       {
+           if (gamesPlayed == 0)
+           {
+               initialScreen();
+           }
+           else
+           {
+               // if there is an alien ship stop the clip
+               if (level > 2 && smallAlienShip != null)
+               {
+                   smallAlienShip.playClip("smallStop");
+                   Participant.expire(smallAlienShip);
+                   initialScreen();
+               }
+               else if (level == 2 && alienShip != null)
+               {
+                   alienShip.playClip("bigStop");
+                   Participant.expire(alienShip);
+                   initialScreen();
+               }
+               else
+               {
+                   // start new game
+                   initialScreen();
+               }
+           }
+       }
+
+       // Time to refresh the screen and deal with keyboard input
+       else if (e.getSource() == refreshTimer)
+       {
+           if (rightKey && !ship.equals(null))
+           {
+               ship.turnRight();
+           }
+           if (leftKey && !ship.equals(null))
+           {
+               ship.turnLeft();
+           }
+           if (upKey && !ship.equals(null))
+           {
+               ship.accelerate();
+           }
+           if (downKey && pstate.countBullets() < 8 && !ship.equals(null))
+           {
+               placeBullet();
+           }
+
+           // It may be time to make a game transition
+           performTransition();
+
+           // Move the participants to their new locations
+           pstate.moveParticipants();
+
+           // Refresh screen
+           display.refresh();
+           
+           // If it's time to place a ship try and add one
+           if (placeShip)
+           {
+               placeShip();
+           }
+
+       }
+       // Plays the beat sound clip after the timer has gone off.
+       else if (e.getSource() == beatTimer)
+       {
+           // Used to create sound clips.
+           SoundClips test = new SoundClips();
+
+           // If the interval is greater than 300, it decreased by the beat delta.
+           if (nextBeat > 300)
+           {
+               nextBeat = nextBeat - BEAT_DELTA;
+           }
+           // If the interval reaches 300 then the beat will remain at its current pace.
+           else
+           {
+               nextBeat = 300;
+           }
+
+           // Sets the new delay
+           beatTimer.setDelay(nextBeat);
+
+           // Plays the first beat clip if the other has already been played.
+           // Beats should alternate.
+           if (beat)
+           {
+               // Sets the beat to false so that the SECOND beat will be played next.
+               beat = false;
+
+               Clip beat1 = test.createClip("/sounds/beat1.wav");
+               if (beat1 != null)
+               {
+                   if (beat1.isRunning())
+                   {
+                       beat1.stop();
+                   }
+                   beat1.setFramePosition(0);
+                   beat1.start();
+               }
+           }
+           else if (!beat)
+           {
+               // Sets the beat to true so that the FIRST beat will be played
+               beat = true;
+
+               Clip beat2 = test.createClip("/sounds/beat2.wav");
+               if (beat2 != null)
+               {
+                   if (beat2.isRunning())
+                   {
+                       beat2.stop();
+                   }
+                   beat2.setFramePosition(0);
+                   beat2.start();
+               }
+           }
+       }
+       else if (e.getSource().equals(alienTimer))
+       {
+           placeAlienShip();
+           alienTimer.stop();
+       }
+       else if (e.getSource().equals(alienBulletTimer))
+       {
+           placeAlienBullet();
+       }
+
+   }
+
     
     /**
      * Teleports the ship to a random location on screen. 
@@ -212,6 +407,52 @@ public class EnhancedController extends Controller
         if (k.getKeyCode() == KeyEvent.VK_T && ship != null)
         {
             ship.setPosition(RANDOM.nextInt(SIZE), RANDOM.nextInt(SIZE));
+        }
+    }
+    
+    
+    /**
+     * Place a new ship in the center of the screen. Remove any existing ship first.
+     */
+    protected boolean spawnZoneSafe ()
+    {
+            // assume the area is safe initially
+            boolean areaSafe = true;
+            Iterator<Participant> iter = this.getParticipants();
+            while (iter.hasNext())
+            {
+                Participant p = iter.next();
+                // if a participant is in the ship spawn zone deem the area unsafe
+                System.out.println("X Coordinate of participant" + p.getX());
+                System.out.println("Y Coordinate of participant" + p.getY());
+                if ( (p.getX() > spawnLeftBound && p.getX() < spawnRightBound) 
+                            && (p.getY() > spawnLowerBound && p.getY() < spawnUpperBound))
+                {    
+                    areaSafe = false;
+                }
+            }
+            return areaSafe;
+
+    }
+    
+    /**
+     * Place a new ship in the center of the screen. Remove any existing ship first.
+     */
+    @Override
+    protected void placeShip ()
+    {
+        if (spawnZoneSafe())
+        {
+            // Place a new ship
+            Participant.expire(ship);
+            ship = new Ship(SIZE / 2, SIZE / 2, -Math.PI / 2, this);
+            addParticipant(ship);
+            display.setLegend("");
+    
+            // Display the level and score when the ship is placed.
+            display.setLevel(level + "");
+            display.setScore(score + "");
+            placeShip = false;
         }
     }
 }
