@@ -46,6 +46,8 @@ public class ShipPowerups extends Participant implements Powerups
         
         // rotate the powerup
         setRotation(Math.PI);
+        
+        powerupSound = new SoundClips();
     }
 
     @Override
@@ -136,6 +138,39 @@ public class ShipPowerups extends Participant implements Powerups
             // Whatever the powerup does
         }
     }
+    
+    /**
+     * Plays the specific sound clip
+     */
+    private void playClip()
+    {
+        if (powerupType.equals("UnlimitedBullets"))
+        {
+            Clip loaded = powerupSound.createClip("/sounds/Cocking Gun-SoundBible.com-327068561.wav");
+            if (loaded != null)
+            {
+                if (loaded.isRunning())
+                {
+                    loaded.stop();
+                }
+                loaded.setFramePosition(0);
+                loaded.start();
+            }
+        }
+        else if (powerupType.equals("ExtraLife"))
+        {
+            Clip extraLife = powerupSound.createClip("/sounds/smb_powerup.wav");
+            if ( extraLife != null)
+            {
+                if (extraLife.isRunning())
+                {
+                    extraLife.stop();
+                }
+                extraLife.setFramePosition(0);
+                extraLife.start();
+            }
+        }
+    }
 
     /**
      * When a Powerup collides with a PowerupDestroyer, it expires
@@ -145,18 +180,7 @@ public class ShipPowerups extends Participant implements Powerups
     {
         if (p instanceof PowerupsDestroyer)
         {
-            // When the powerup is collected, a sound is played. 
-            SoundClips test = new SoundClips();
-            Clip powerUP = test.createClip("/sounds/smb_powerup.wav");
-            if ( powerUP != null)
-            {
-                if (powerUP.isRunning())
-                {
-                    powerUP.stop();
-                }
-                powerUP.setFramePosition(0);
-                powerUP.start();
-            }
+            playClip();
             
             // Do whatever the powerup does
             powerupEffect();

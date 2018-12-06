@@ -27,6 +27,8 @@ public class EnhancedController extends Controller
 
     /** The powerup creation timer */
     private Timer powerupTimer;
+    
+    private EnhancedShip eShip;
 
     /** On screen bullet limit */
     private int bulletLimit;
@@ -574,7 +576,8 @@ public class EnhancedController extends Controller
         {
             // Place a new ship
             Participant.expire(ship);
-            ship = new Ship(SIZE / 2, SIZE / 2, -Math.PI / 2, this);
+            eShip = new EnhancedShip(SIZE / 2, SIZE / 2, -Math.PI / 2, this);
+            ship = eShip;
             addParticipant(ship);
             display.setLegend("");
 
@@ -583,5 +586,12 @@ public class EnhancedController extends Controller
             display.setScore(score + "");
             placeShip = false;
         }
+    }
+    
+    @Override
+    protected void placeBullet()
+    {
+        // Place a new bullet
+        addParticipant(new EnhancedBullet((ship.getXNose()), ship.getYNose(), ship.getRotation(), this));
     }
 }
