@@ -236,7 +236,8 @@ public class EnhancedController extends Controller
                 }
 
                 // Starts the timer for an alien ship to appear
-                alienTimer.start();
+                alienTimer = new Timer(RANDOM.nextInt(5001) + 10000, this);
+                alienTimer.restart();
 
                 // Re-adds the key listener.
                 display.addKeyListener(this);
