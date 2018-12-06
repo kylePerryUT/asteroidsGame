@@ -42,7 +42,7 @@ public class ShipPowerups extends Participant implements Powerups
         powerupOutline(powerupType);
         
         // Start a new powerup timer
-        new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(2001) + 30000);
+        new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(2001) + 3000);
         
         // rotate the powerup
         setRotation(Math.PI);
@@ -131,7 +131,7 @@ public class ShipPowerups extends Participant implements Powerups
         else if (powerupType == "UnlimitedBullets")
         {
             // Whatever the powerup does
-            econtroller.setBulletLimit(1000);
+            econtroller.setBulletLimit(100);
         }
         else if (powerupType == "Indestructible")
         {
@@ -186,7 +186,11 @@ public class ShipPowerups extends Participant implements Powerups
             powerupEffect();
             
             // Expire the Powerup from the game
-            Participant.expire(this);
+            // Participant.expire(this);
+            Path2D.Double emptyShape = new Path2D.Double();
+            emptyShape.moveTo(0, 0);
+            outline = emptyShape;
+            setPosition(-25,0);
         }
     }
     
