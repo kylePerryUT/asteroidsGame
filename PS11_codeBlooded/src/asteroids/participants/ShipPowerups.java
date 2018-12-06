@@ -42,7 +42,7 @@ public class ShipPowerups extends Participant
         powerupOutline(powerupType);
         
         // Start a new powerup timer
-        new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(5001) + 5000);
+        new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(2001) + 3000);
         
         // rotate the powerup
         setRotation(Math.PI);

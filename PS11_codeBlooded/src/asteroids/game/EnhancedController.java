@@ -40,7 +40,7 @@ public class EnhancedController extends Controller
         placeShip = false;   
         
         // Creates a new powerup timer
-        powerupTimer = new Timer(RANDOM.nextInt(5001) + 5000, this);
+        powerupTimer = new Timer(RANDOM.nextInt(5001) + 10000, this);
     }
    
    /**
