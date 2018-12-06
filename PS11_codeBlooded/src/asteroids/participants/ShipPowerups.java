@@ -1,14 +1,9 @@
 package asteroids.participants;
 
 import static asteroids.game.Constants.*;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.geom.Path2D;
-import java.util.Random;
 import javax.sound.sampled.Clip;
-import javax.swing.Timer;
 import asteroids.destroyers.PowerupsDestroyer;
 import asteroids.game.Controller;
 import asteroids.game.Participant;
