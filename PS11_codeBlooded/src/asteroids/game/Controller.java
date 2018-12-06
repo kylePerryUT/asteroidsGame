@@ -834,4 +834,12 @@ public class Controller implements KeyListener, ActionListener
             downKey = false;
         }
     }
+    
+    /**
+     * Tell the control to add another life
+     */
+    public void addLife()
+    {
+        placeLives(1);
+    }
 }

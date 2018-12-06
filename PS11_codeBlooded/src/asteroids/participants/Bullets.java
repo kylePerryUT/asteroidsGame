@@ -7,7 +7,6 @@ import javax.sound.sampled.Clip;
 import asteroids.destroyers.AlienDestroyer;
 import asteroids.destroyers.AsteroidDestroyer;
 import asteroids.destroyers.BulletDestroyer;
-import asteroids.destroyers.ShipDestroyer;
 import asteroids.game.Controller;
 import asteroids.game.Participant;
 import asteroids.game.ParticipantCountdownTimer;
