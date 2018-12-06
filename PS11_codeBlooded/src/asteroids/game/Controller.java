@@ -473,14 +473,14 @@ public class Controller implements KeyListener, ActionListener
         // Increase the score if and start a timer for the next alien ship. 
         if (A.getSize() == 0)
         {
-            alienTimer.start();
+            alienTimer.restart();
             score = score + 1000;
             display.setScore(score + "");
         }
         // Increase the score if and start a timer for the next alien ship.
         else if (A.getSize() == 1)
         {
-            alienTimer.start();
+            alienTimer.restart();
             score = score + 200;
             display.setScore(score + "");
         }
@@ -716,7 +716,7 @@ public class Controller implements KeyListener, ActionListener
                 }
 
                 // Starts the timer for an alien ship to appear
-                alienTimer.start();
+                alienTimer.restart();
 
                 // Re-adds the key listener.
                 display.addKeyListener(this);
