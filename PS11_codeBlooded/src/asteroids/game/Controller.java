@@ -136,7 +136,7 @@ public class Controller implements KeyListener, ActionListener
     /**
      * Configures the game screen to display the splash screen
      */
-    private void splashScreen ()
+    protected void splashScreen ()
     {
         // Clear the screen, reset the level, and display the legend
         clear();

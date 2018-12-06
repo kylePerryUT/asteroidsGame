@@ -138,15 +138,15 @@ public class ShipPowerups extends Participant
         {
             // When the powerup is collected, a sound is played. 
             SoundClips test = new SoundClips();
-            Clip shipBoom = test.createClip("/sounds/bangShip.wav");
-            if ( shipBoom != null)
+            Clip powerUP = test.createClip("/sounds/smb_powerup.wav");
+            if ( powerUP != null)
             {
-                if (shipBoom.isRunning())
+                if (powerUP.isRunning())
                 {
-                    shipBoom.stop();
+                    powerUP.stop();
                 }
-                shipBoom.setFramePosition(0);
-                shipBoom.start();
+                powerUP.setFramePosition(0);
+                powerUP.start();
             }
             
             // Do whatever the powerup does

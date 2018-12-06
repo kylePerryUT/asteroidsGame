@@ -42,6 +42,40 @@ public class EnhancedController extends Controller
         // Creates a new powerup timer
         powerupTimer = new Timer(RANDOM.nextInt(5001) + 5000, this);
     }
+    
+    @Override
+    protected void splashScreen()
+    {
+        super.splashScreen();
+        SoundClips test = new SoundClips();
+        Clip splash = test.createClip("/sounds/smb_stage_clear.wav");
+        if ( splash != null)
+        {
+            if (splash.isRunning())
+            {
+                splash.stop();
+            }
+            splash.setFramePosition(0);
+            splash.start();
+        }
+    }
+    
+    @Override
+    protected void finalScreen ()
+    {
+        super.finalScreen();
+        SoundClips test = new SoundClips();
+        Clip finalScrn = test.createClip("/sounds/smb_gameover.wav");
+        if ( finalScrn != null)
+        {
+            if (finalScrn.isRunning())
+            {
+                finalScrn.stop();
+            }
+            finalScrn.setFramePosition(0);
+            finalScrn.start();
+        }
+    }
    
    /**
     * If the transition time has been reached, transition to a new state
