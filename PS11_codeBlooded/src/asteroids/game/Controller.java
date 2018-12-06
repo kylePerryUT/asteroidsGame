@@ -105,7 +105,7 @@ public class Controller implements KeyListener, ActionListener
         nextBeat = INITIAL_BEAT;
         beat = true;
 
-        // Sets up the alien timer
+        // Sets up the alien timers
         alienTimer = new Timer(5000, this);
         alienBulletTimer = new Timer(2500, this);
 
@@ -752,6 +752,17 @@ public class Controller implements KeyListener, ActionListener
 
                 // Refreshes the display to show the changes.
                 display.refresh();
+                
+                // Expire any active bullet participants
+                Iterator<Participant> iter = this.getParticipants();
+                while (iter.hasNext())
+                {
+                    Participant p = iter.next();
+                    if (p instanceof Bullets)
+                    {    
+                        Participant.expire(p);
+                    }
+                }
 
             }
 

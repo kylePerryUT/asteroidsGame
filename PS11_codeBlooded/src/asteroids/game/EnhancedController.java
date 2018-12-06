@@ -25,6 +25,9 @@ public class EnhancedController extends Controller
     /** Tracks if its time to place a new ship */
     private boolean placeShip;
     
+    /** The powerup creation timer */
+    private Timer powerupTimer;
+    
     
     public EnhancedController()
     {
@@ -35,6 +38,9 @@ public class EnhancedController extends Controller
         
         // Initializes the placeShip instance variable. 
         placeShip = false;   
+        
+        // Creates a new powerup timer
+        powerupTimer = new Timer(RANDOM.nextInt(5001) + 5000, this);
     }
    
    /**
@@ -277,6 +283,9 @@ public class EnhancedController extends Controller
        display.setleaderBoard("");
        display.requestFocusInWindow();
        display.refresh(); 
+       
+       // Start the powerup timer
+       powerupTimer.start();
    }
 
 
@@ -417,6 +426,37 @@ public class EnhancedController extends Controller
        {
            placeAlienBullet();
        }
+       else if (e.getSource() == powerupTimer)
+       {
+           // If the powerup timer is running, Stop the timer
+           if (powerupTimer.isRunning())
+           {
+               powerupTimer.stop();
+           }
+           
+           // Count the number of active powerup participants
+           int numPowerUps = 0;
+           Iterator<Participant> iter = this.getParticipants();
+           while (iter.hasNext())
+           {
+               Participant p = iter.next();
+               if (p instanceof ShipPowerups)
+               {    
+                   numPowerUps++;
+               }
+           }
+           
+           // Don't create a power up if there are already 3 on screen
+           if (numPowerUps < 3)
+           {
+               // create and add a powerup participant
+               addParticipant(new ShipPowerups (this));
+           }
+           
+           // create and start a new powerup timer
+           powerupTimer = new Timer(RANDOM.nextInt(5001) + 5000, this);
+           powerupTimer.start();
+       }
 
    }
 
@@ -448,7 +488,6 @@ public class EnhancedController extends Controller
             {
                 Participant p = iter.next();
                 // if a participant is in the ship spawn zone deem the area unsafe
-                System.out.println("Y Coordinate of participant" + p.getY());
                 if ( (p.getX() > spawnLeftBound && p.getX() < spawnRightBound) 
                             && (p.getY() > spawnLowerBound && p.getY() < spawnUpperBound))
                 {    

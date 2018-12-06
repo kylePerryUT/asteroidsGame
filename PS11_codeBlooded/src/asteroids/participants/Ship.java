@@ -13,7 +13,7 @@ import sounds.SoundClips;
 /**
  * Represents ships
  */
-public class Ship extends Participant implements AsteroidDestroyer, AlienBulletDestroyer, AlienDestroyer
+public class Ship extends Participant implements AsteroidDestroyer, AlienBulletDestroyer, AlienDestroyer, PowerupsDestroyer
 {
     /** The outline of the ship */
     private Shape outline;
