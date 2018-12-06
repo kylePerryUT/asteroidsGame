@@ -17,17 +17,12 @@ public class Bullets extends Participant implements AsteroidDestroyer, AlienDest
 {
     /** The outline of the bullet */
     private Shape outline;
-
-    /** Game controller */
-    private Controller controller;
     
-
     /**
      * Constructs a bullet at the specified coordinates that is pointed in the given direction.
      */
     public Bullets (double x, double y, double direction, Controller controller)
     {
-        this.controller = controller;
        
         // Draws the bullet
         Ellipse2D.Double bullet = new Ellipse2D.Double(x, y, 1, 1);

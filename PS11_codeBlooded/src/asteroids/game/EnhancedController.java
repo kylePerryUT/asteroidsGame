@@ -2,16 +2,13 @@ package asteroids.game;
 
 import static asteroids.game.Constants.*;
 import sounds.*;
-import java.awt.Dialog;
 import java.awt.event.*;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.Scanner;
-import java.util.TreeMap;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
 import asteroids.destroyers.Powerups;
@@ -295,7 +292,6 @@ public class EnhancedController extends Controller
                 // Rest the powerup timer
                 powerupTimer.restart();
             }
-
         }
     }
 
