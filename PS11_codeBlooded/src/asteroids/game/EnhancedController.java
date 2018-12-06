@@ -109,13 +109,15 @@ public class EnhancedController extends Controller
                     alienBulletTimer.stop();
                     smallAlienShip.playClip("smallStop");
                 }
-                // Stops the beat Timer.
+                // Stops the Timers.
                 beatTimer.stop();
 
                 alienTimer.stop();
+                
+                powerupTimer.stop();
 
                 // Prompts the user to enter their initials.
-                initials = JOptionPane.showInputDialog("Enter anitials:");
+                initials = JOptionPane.showInputDialog("Enter Initials:");
 
                 try
                 {
@@ -182,7 +184,6 @@ public class EnhancedController extends Controller
                 catch (IOException e)
                 {
                     JOptionPane.showMessageDialog(display, "error opening file", "Error", 1);
-                    // e.printStackTrace();
                 }
                 // Display the game over screen and the leader boards.
                 finalScreen();
@@ -205,6 +206,17 @@ public class EnhancedController extends Controller
                     if (alienShip != null || smallAlienShip != null)
                     {
                         alienBulletTimer.start();
+                    }
+                }
+                // Stop all active powerups
+                Iterator<Participant> iter = this.getParticipants();
+                while (iter.hasNext())
+                {
+                    Participant p = iter.next();
+                    if (p instanceof ShipPowerups)
+                    {
+                        ShipPowerups powUp = (ShipPowerups) p;
+                        powUp.stopPowerup();
                     }
                 }
             }
@@ -265,7 +277,22 @@ public class EnhancedController extends Controller
 
                 // Refreshes the display to show the changes.
                 display.refresh();
-
+                
+                // Disables and expires all active powerups
+                Iterator<Participant> iter = this.getParticipants();
+                while (iter.hasNext())
+                {
+                    Participant p = iter.next();
+                    if (p instanceof ShipPowerups)
+                    {
+                        ShipPowerups powUp = (ShipPowerups) p;
+                        powUp.stopPowerup();
+                        Participant.expire(p);
+                    }
+                }
+                
+                // Rest the powerup timer
+                powerupTimer.restart();
             }
 
         }
@@ -496,7 +523,7 @@ public class EnhancedController extends Controller
             }
 
             // create and start a new powerup timer
-            powerupTimer = new Timer(RANDOM.nextInt(5001) + 5000, this);
+            powerupTimer = new Timer(RANDOM.nextInt(5001) + 10000, this);
             powerupTimer.start();
         }
 
@@ -527,8 +554,8 @@ public class EnhancedController extends Controller
         while (iter.hasNext())
         {
             Participant p = iter.next();
-            // if a participant is in the ship spawn zone deem the area unsafe
-            if ((p.getX() > spawnLeftBound && p.getX() < spawnRightBound)
+            // if a participant other than a power up is in the ship spawn zone deem the area unsafe
+            if ( !(p instanceof ShipPowerups) && (p.getX() > spawnLeftBound && p.getX() < spawnRightBound)
                     && (p.getY() > spawnLowerBound && p.getY() < spawnUpperBound))
             {
                 areaSafe = false;

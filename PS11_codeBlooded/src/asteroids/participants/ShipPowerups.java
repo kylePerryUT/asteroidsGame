@@ -41,7 +41,7 @@ public class ShipPowerups extends Participant
         powerupOutline(powerupType);
         
         // Start a new powerup timer
-        new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(2001) + 3000);
+        new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(2001) + 30000);
         
         // rotate the powerup
         setRotation(Math.PI);
@@ -189,6 +189,23 @@ public class ShipPowerups extends Participant
         }
     }
     
+    /**
+     * Turn the power up off
+     */
+    public void stopPowerup ()
+    {
+        // If it's a ulimited bullets powerup change the bullet limit back to 8
+        if (powerupType == "UnlimitedBullets")
+        {
+            // Whatever the powerup does
+            econtroller.setBulletLimit(8);
+        }
+        else if (powerupType == "Indestructible")
+        {
+            // Undo what the powerup did
+        }
+    }
+    
     @Override
     public void countdownComplete (Object payload)
     {
@@ -196,16 +213,7 @@ public class ShipPowerups extends Participant
         if (payload.equals("end") && !this.isExpired())
         {
             Participant.expire(this);
-            // If it's a ulimited bullets powerup change the bullet limit back to 8
-            if (powerupType == "UnlimitedBullets")
-            {
-                // Whatever the powerup does
-                econtroller.setBulletLimit(8);
-            }
-            else if (powerupType == "Indestructible")
-            {
-                // Undo what the powerup did
-            }
+            stopPowerup();
         }
     }
 
