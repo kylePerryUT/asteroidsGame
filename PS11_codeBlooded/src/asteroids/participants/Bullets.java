@@ -36,7 +36,14 @@ public class Bullets extends Participant implements AsteroidDestroyer, AlienDest
         // Sets the velocity of the bullet which causes it to move.
         setVelocity(BULLET_SPEED, direction);
         
-        // Creates and plays the bullet sound clip.
+        playClip();
+        
+        new ParticipantCountdownTimer(this, "end", BULLET_DURATION);
+    }
+    
+    protected void playClip()
+    {
+     // Creates and plays the bullet sound clip.
         SoundClips test = new SoundClips();
         Clip peew = test.createClip("/sounds/fire.wav");
         if ( peew != null)
@@ -49,8 +56,6 @@ public class Bullets extends Participant implements AsteroidDestroyer, AlienDest
             peew.setLoopPoints(0, 1);
             peew.loop(1);
         }
-        
-        new ParticipantCountdownTimer(this, "end", BULLET_DURATION);
     }
 
 
