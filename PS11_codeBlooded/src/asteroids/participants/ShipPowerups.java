@@ -116,6 +116,7 @@ public class ShipPowerups extends Participant
         if (powerupType == "ExtraLife")
         {
             // Whatever the powerup does
+            controller.addLife();
         }
         else if (powerupType == "UnlimitedBullets")
         {
