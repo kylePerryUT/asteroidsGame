@@ -243,7 +243,7 @@ public class Controller implements KeyListener, ActionListener
     {
         // Place the lives
         int numLife = 1;
-        while ((numLife <= numLives) && (lives <= 5))
+        while ((numLife <= numLives) && (lives < 5))
         {
             lives++;
             ShipLives life = new ShipLives(LABEL_HORIZONTAL_OFFSET + livesHorizOffset, LABEL_VERTICAL_OFFSET + 60,

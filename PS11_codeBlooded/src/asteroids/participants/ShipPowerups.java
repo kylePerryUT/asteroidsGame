@@ -2,6 +2,7 @@ package asteroids.participants;
 
 import static asteroids.game.Constants.*;
 import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import javax.sound.sampled.Clip;
 import asteroids.destroyers.PowerupsDestroyer;
@@ -41,8 +42,10 @@ public class ShipPowerups extends Participant
         powerupOutline(powerupType);
         
         // Start a new powerup timer
-        new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(5001) + 5000);
+        new ParticipantCountdownTimer(this, "end", RANDOM.nextInt(2001) + 3000);
         
+        // rotate the powerup
+        setRotation(Math.PI);
     }
 
     @Override
@@ -57,7 +60,7 @@ public class ShipPowerups extends Participant
     private void choosePowerup()
     {
         // Add more powerups in the future
-        int rand = RANDOM.nextInt(1);
+        int rand = RANDOM.nextInt(2);
         if (rand == 0)
         {
             powerupType = "ExtraLife";
@@ -81,7 +84,7 @@ public class ShipPowerups extends Participant
         Path2D.Double powerupShape = new Path2D.Double();
         if (powerupType == "ExtraLife")
         {
-            // draw shape
+            // draw extra life shape
             powerupShape.moveTo(3, 9);
             powerupShape.lineTo(-3, 9);
             powerupShape.lineTo(-3, 3);
@@ -100,7 +103,12 @@ public class ShipPowerups extends Participant
         }
         else if (powerupType == "UnlimitedBullets")
         {
-            // draw shape
+            // draw unlimited bullet shape
+            powerupShape.moveTo(-5, 0);
+            powerupShape.lineTo(5, 0);
+            powerupShape.lineTo(5, 15);
+            powerupShape.curveTo(5,15,0,25,-5,15);
+            powerupShape.closePath();
             outline = powerupShape;
         }
         else if (powerupType == "Indestructible")
@@ -154,9 +162,6 @@ public class ShipPowerups extends Participant
             
             // Expire the Powerup from the game
             Participant.expire(this);
-
-            // Tell the controller the Powerup was destroyed
-            //controller.powerupDestroyed();
         }
     }
     
@@ -168,9 +173,6 @@ public class ShipPowerups extends Participant
         {
             Participant.expire(this);
         }
-        
-        // Tell the controller the Powerup was destroyed
-        //controller.powerupDestroyed();
     }
 
 }
