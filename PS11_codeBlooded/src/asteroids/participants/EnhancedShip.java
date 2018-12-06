@@ -1,6 +1,7 @@
 package asteroids.participants;
 
 import javax.sound.sampled.Clip;
+import asteroids.destroyers.ShipDestroyer;
 import asteroids.game.Controller;
 import asteroids.game.Participant;
 import sounds.SoundClips;
@@ -19,16 +20,19 @@ public class EnhancedShip extends Ship
     {
         super.collidedWith(p);
         
-        SoundClips test = new SoundClips();
-        Clip shipBoom = test.createClip("/sounds/smb_mariodie.wav");
-        if ( shipBoom != null)
+        if ( p instanceof ShipDestroyer)
         {
-            if (shipBoom.isRunning())
+            SoundClips test = new SoundClips();
+            Clip shipBoom = test.createClip("/sounds/smb_mariodie.wav");
+            if ( shipBoom != null)
             {
-                shipBoom.stop();
+                if (shipBoom.isRunning())
+                {
+                    shipBoom.stop();
+                }
+                shipBoom.setFramePosition(0);
+                shipBoom.start();
             }
-            shipBoom.setFramePosition(0);
-            shipBoom.start();
         }
     }
     

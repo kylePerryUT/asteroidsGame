@@ -2,11 +2,10 @@ package asteroids.participants;
 
 import static asteroids.game.Constants.*;
 import java.awt.Shape;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import javax.sound.sampled.Clip;
 import asteroids.destroyers.PowerupsDestroyer;
-import asteroids.game.Controller;
+import asteroids.game.EnhancedController;
 import asteroids.game.Participant;
 import asteroids.game.ParticipantCountdownTimer;
 import sounds.SoundClips;
@@ -23,11 +22,11 @@ public class ShipPowerups extends Participant
     private String powerupType;
     
     /** The game controller */
-    private Controller controller;
+    private EnhancedController econtroller;
     
-    public ShipPowerups (Controller controller)
+    public ShipPowerups (EnhancedController econtroller)
     {
-        this.controller = controller;
+        this.econtroller = econtroller;
         
         // Set a random position of the powerup.
         int x = RANDOM.nextInt(651) + 50;
@@ -46,6 +45,8 @@ public class ShipPowerups extends Participant
         
         // rotate the powerup
         setRotation(Math.PI);
+        
+        powerupSound = new SoundClips();
     }
 
     @Override
@@ -124,15 +125,49 @@ public class ShipPowerups extends Participant
         if (powerupType == "ExtraLife")
         {
             // Whatever the powerup does
-            controller.addLife();
+            econtroller.addLife();
         }
         else if (powerupType == "UnlimitedBullets")
         {
             // Whatever the powerup does
+            econtroller.setBulletLimit(1000);
         }
         else if (powerupType == "Indestructible")
         {
             // Whatever the powerup does
+        }
+    }
+    
+    /**
+     * Plays the specific sound clip
+     */
+    private void playClip()
+    {
+        if (powerupType.equals("UnlimitedBullets"))
+        {
+            Clip loaded = powerupSound.createClip("/sounds/Cocking Gun-SoundBible.com-327068561.wav");
+            if (loaded != null)
+            {
+                if (loaded.isRunning())
+                {
+                    loaded.stop();
+                }
+                loaded.setFramePosition(0);
+                loaded.start();
+            }
+        }
+        else if (powerupType.equals("ExtraLife"))
+        {
+            Clip extraLife = powerupSound.createClip("/sounds/smb_powerup.wav");
+            if ( extraLife != null)
+            {
+                if (extraLife.isRunning())
+                {
+                    extraLife.stop();
+                }
+                extraLife.setFramePosition(0);
+                extraLife.start();
+            }
         }
     }
 
@@ -144,18 +179,7 @@ public class ShipPowerups extends Participant
     {
         if (p instanceof PowerupsDestroyer)
         {
-            // When the powerup is collected, a sound is played. 
-            SoundClips test = new SoundClips();
-            Clip powerUP = test.createClip("/sounds/smb_powerup.wav");
-            if ( powerUP != null)
-            {
-                if (powerUP.isRunning())
-                {
-                    powerUP.stop();
-                }
-                powerUP.setFramePosition(0);
-                powerUP.start();
-            }
+            playClip();
             
             // Do whatever the powerup does
             powerupEffect();
@@ -172,6 +196,16 @@ public class ShipPowerups extends Participant
         if (payload.equals("end") && !this.isExpired())
         {
             Participant.expire(this);
+            // If it's a ulimited bullets powerup change the bullet limit back to 8
+            if (powerupType == "UnlimitedBullets")
+            {
+                // Whatever the powerup does
+                econtroller.setBulletLimit(8);
+            }
+            else if (powerupType == "Indestructible")
+            {
+                // Undo what the powerup did
+            }
         }
     }
 
