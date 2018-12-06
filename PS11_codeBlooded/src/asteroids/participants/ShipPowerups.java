@@ -4,13 +4,14 @@ import static asteroids.game.Constants.*;
 import java.awt.Shape;
 import java.awt.geom.Path2D;
 import javax.sound.sampled.Clip;
+import asteroids.destroyers.Powerups;
 import asteroids.destroyers.PowerupsDestroyer;
 import asteroids.game.EnhancedController;
 import asteroids.game.Participant;
 import asteroids.game.ParticipantCountdownTimer;
 import sounds.SoundClips;
 
-public class ShipPowerups extends Participant
+public class ShipPowerups extends Participant implements Powerups
 {
     /** The outline of the alien ship */
     private Shape outline;
@@ -180,6 +181,7 @@ public class ShipPowerups extends Participant
         {
             // Undo what the powerup did
         }
+        Participant.expire(this);
     }
     
     @Override
@@ -188,7 +190,6 @@ public class ShipPowerups extends Participant
         // If the powerup is not expired, expire it
         if (payload.equals("end") && !this.isExpired())
         {
-            Participant.expire(this);
             stopPowerup();
         }
     }

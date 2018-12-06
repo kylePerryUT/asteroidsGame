@@ -14,6 +14,7 @@ import java.util.Scanner;
 import java.util.TreeMap;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
+import asteroids.destroyers.Powerups;
 import asteroids.participants.*;
 
 public class EnhancedController extends Controller
@@ -211,7 +212,7 @@ public class EnhancedController extends Controller
                 while (iter.hasNext())
                 {
                     Participant p = iter.next();
-                    if (p instanceof ShipPowerups)
+                    if (p instanceof Powerups)
                     {
                         ShipPowerups powUp = (ShipPowerups) p;
                         powUp.stopPowerup();
@@ -277,15 +278,15 @@ public class EnhancedController extends Controller
                 display.refresh();
                 
                 // Disables and expires all active powerups
+                // Stop all active powerups
                 Iterator<Participant> iter = this.getParticipants();
                 while (iter.hasNext())
                 {
                     Participant p = iter.next();
-                    if (p instanceof ShipPowerups)
+                    if (p instanceof Powerups)
                     {
                         ShipPowerups powUp = (ShipPowerups) p;
                         powUp.stopPowerup();
-                        Participant.expire(p);
                     }
                 }
                 
