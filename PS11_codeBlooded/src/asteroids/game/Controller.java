@@ -4,6 +4,7 @@ import static asteroids.game.Constants.*;
 import sounds.*;
 import java.awt.event.*;
 import java.util.Iterator;
+import java.util.stream.DoubleStream;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
 import asteroids.participants.*;
@@ -104,9 +105,9 @@ public class Controller implements KeyListener, ActionListener
         // Sets up the beat timer.
         nextBeat = INITIAL_BEAT;
         beat = true;
-
+        
         // Sets up the alien timers
-        alienTimer = new Timer(5000, this);
+        alienTimer = new Timer(RANDOM.nextInt(5001) + 10000, this);
         alienBulletTimer = new Timer(2500, this);
 
         // Bring up the splash screen and start the refresh timer
@@ -473,6 +474,7 @@ public class Controller implements KeyListener, ActionListener
         // Increase the score if and start a timer for the next alien ship. 
         if (A.getSize() == 0)
         {
+            alienTimer = new Timer(RANDOM.nextInt(5001) + 10000, this);
             alienTimer.restart();
             score = score + 1000;
             display.setScore(score + "");
@@ -480,6 +482,7 @@ public class Controller implements KeyListener, ActionListener
         // Increase the score if and start a timer for the next alien ship.
         else if (A.getSize() == 1)
         {
+            alienTimer = new Timer(RANDOM.nextInt(5001) + 10000, this);
             alienTimer.restart();
             score = score + 200;
             display.setScore(score + "");
@@ -716,6 +719,7 @@ public class Controller implements KeyListener, ActionListener
                 }
 
                 // Starts the timer for an alien ship to appear
+                alienTimer = new Timer(RANDOM.nextInt(5001) + 10000, this);
                 alienTimer.restart();
 
                 // Re-adds the key listener.
