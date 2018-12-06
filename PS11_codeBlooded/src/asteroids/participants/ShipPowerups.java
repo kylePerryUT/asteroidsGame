@@ -2,11 +2,10 @@ package asteroids.participants;
 
 import static asteroids.game.Constants.*;
 import java.awt.Shape;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import javax.sound.sampled.Clip;
 import asteroids.destroyers.PowerupsDestroyer;
-import asteroids.game.Controller;
+import asteroids.game.EnhancedController;
 import asteroids.game.Participant;
 import asteroids.game.ParticipantCountdownTimer;
 import sounds.SoundClips;
@@ -23,11 +22,11 @@ public class ShipPowerups extends Participant
     private String powerupType;
     
     /** The game controller */
-    private Controller controller;
+    private EnhancedController econtroller;
     
-    public ShipPowerups (Controller controller)
+    public ShipPowerups (EnhancedController econtroller)
     {
-        this.controller = controller;
+        this.econtroller = econtroller;
         
         // Set a random position of the powerup.
         int x = RANDOM.nextInt(651) + 50;
@@ -124,11 +123,12 @@ public class ShipPowerups extends Participant
         if (powerupType == "ExtraLife")
         {
             // Whatever the powerup does
-            controller.addLife();
+            econtroller.addLife();
         }
         else if (powerupType == "UnlimitedBullets")
         {
             // Whatever the powerup does
+            econtroller.setBulletLimit(1000);
         }
         else if (powerupType == "Indestructible")
         {
@@ -172,6 +172,16 @@ public class ShipPowerups extends Participant
         if (payload.equals("end") && !this.isExpired())
         {
             Participant.expire(this);
+            // If it's a ulimited bullets powerup change the bullet limit back to 8
+            if (powerupType == "UnlimitedBullets")
+            {
+                // Whatever the powerup does
+                econtroller.setBulletLimit(8);
+            }
+            else if (powerupType == "Indestructible")
+            {
+                // Undo what the powerup did
+            }
         }
     }
 
