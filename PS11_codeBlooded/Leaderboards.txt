@@ -1,9 +1,14 @@
 
 90	kp
 830	TTS
-<<<<<<< HEAD
 4980	TTT
 460	TRV
-=======
 80	null
->>>>>>> branch 'master' of https://github.com/kylePerryUT/codeBlooded.git
+14030	TRV
+3360	TTT
+35160	TTT
+8580	TTT
+60	null
+60	Mario
+60	null
+160	TTT

@@ -118,7 +118,7 @@ public class EnhancedController extends Controller
                 powerupTimer.stop();
 
                 // Prompts the user to enter their initials.
-                initials = JOptionPane.showInputDialog("Enter Initials:");
+                initials = JOptionPane.showInputDialog(null, "Enter Initials:", "Leader Board", JOptionPane.INFORMATION_MESSAGE);
 
                 try
                 {
